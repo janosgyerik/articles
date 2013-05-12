@@ -16,7 +16,7 @@ keywords: practical, fast, effective, efficient
 
 Example: todo
 
-### Cycle windows
+### Switch between windows
 
 Example: todo
 
@@ -43,15 +43,15 @@ By default -o emacs is set
 +o emacs/vi to unset
 
 
-### Backward search command with ctrl-r
+### Backward search history with ctrl-r
 
 Example: todo
 
-### Quick editing
+### Editing quickly
 
 Example: todo
 
-### Quick navigation
+### Moving quickly
 
 Example: todo
 
@@ -59,7 +59,7 @@ Example: todo
 
 
 
-## vi commands in less
+## vi shortcuts in less
 
 ### Searching forward and backward
 
@@ -101,3 +101,4 @@ Example: todo
 
 * `man screen`
 * `man bash` and search for `READLINE`
+*  https://docs.google.com/presentation/d/13N06QfsemvTFiQLF5nC-eatlktmj5DMFAzxexwJ8TgA/pub?start=false&loop=false

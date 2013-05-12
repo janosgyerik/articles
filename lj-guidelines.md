@@ -12,7 +12,7 @@ A fair, real-life evaluation of a Linux-related product. Includes a product scre
 ## Article format
 
 * ASCII text in email body or as attachment, optionally other
-  attachments such as screenshots, etc, separately or in a tar
+  attachments such as screenshots, separately or in a tar
 
 * Notes and formatting information within [square brackets]
 
@@ -137,7 +137,7 @@ A fair, real-life evaluation of a Linux-related product. Includes a product scre
         > Setup IS ACCOMPLISHED BY...
 
 
-## Example hostnames, domain names, etc
+## Example hostnames, domain names, and others
 
 * Do not use unregistered domains
 
@@ -151,7 +151,7 @@ A fair, real-life evaluation of a Linux-related product. Includes a product scre
 ## Other notes
 
 * Acronyms: spell out when used for the first time, with the acronym
-  in parentheses. Except very common acronyms like ATA, CD, HTTP, etc
+  in parentheses. Except very common acronyms such as ATA, CD, HTTP
 
 * Avoid lengthy explanations of compiling and installing programs
 

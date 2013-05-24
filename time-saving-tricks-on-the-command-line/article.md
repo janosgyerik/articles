@@ -1,4 +1,4 @@
-# Practical tips & tricks in the Linux shell
+# Time-saving tricks on the command line
 
 I put together this simple presentation about a few practical tips in
 the Linux/UNIX/BSD/etc shell. I use most of these literally every
@@ -6,8 +6,8 @@ minute when I work in the shell, and I’m always surprised to see
 friends and colleagues not using them. I hope I will get to present
 this someday, somewhere.
 
-keywords: practical, fast, effective, efficient
-
+NOT a list of things that 'sound like a good idea to do'
+    this is stuff I use probably every minute, every hour, or at least every day
 
 
 ## screen

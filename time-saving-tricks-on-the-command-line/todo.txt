@@ -1,0 +1,16 @@
+article
+    ! skeleton
+
+writing
+    write write write and check the word count
+    ? should use gerunds for headings?
+        check in current articles
+    keywords: practical, fast, effective, efficient
+
+bio
+
+teaser that will go beneath the title of the article
+
+teaser that will go on the TOC of LJ
+
+

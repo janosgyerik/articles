@@ -1,7 +1,7 @@
 # Time-saving tricks on the command line
 
-*A few simple but very effective tips that will make you
-lightning fast on the command line*
+A few simple but very effective tips that will make you
+lightning fast on the command line
 
 I remember the first time a friend of mine introduced me to
 Linux, and showed me how I don't need to fully type commands
@@ -46,23 +46,23 @@ Luckily, you really don't need to master screen to benefit
 from it greatly. You can already enjoy its greatest benefits
 by using just a few key features, namely:
 
-* `screen -R projectx`: Reattach to the screen session named
+* screen -R projectx: Reattach to the screen session named
   "projectx" or create it fresh now
 
-* `C-a c`: create a new window `C-a n`: switch to the next
+* [C-a c]: create a new window [C-a n]: switch to the next
 
-* `C-a n`: switch to the next window
+* [C-a n]: switch to the next window
 
-* `C-a p`: switch to the previous window
+* [C-a p]: switch to the previous window
 
-* `C-a 0`: switch to the first window, use `C-a 1` for the
+* [C-a 0]: switch to the first window, use [C-a 1] for the
   second, and so on
 
-* `C-a w`: view the list of windows
+* [C-a w]: view the list of windows
 
-* `C-a d`: detach from this screen session
+* [C-a d]: detach from this screen session
 
-* `screen -ls`: view the list of screen sessions
+* screen -ls: view the list of screen sessions
 
 I will show all of these in the context of a realistic
 example: debugging a Django website on my remote hosting
@@ -95,11 +95,11 @@ the relevant files will be right there in front of me.
 There are different ways of starting screen, I recommend
 this one:
 
-    screen -R mysite
+screen -R mysite
 
 When you run this for the first time, it will create
 a screen session named "mysite". Later you can use this same
-command to reconnect to this session again. (The `-R` flag
+command to reconnect to this session again. (The -R flag
 stands for "reattach".)
 
 ### Creating windows
@@ -107,13 +107,13 @@ stands for "reattach".)
 Now that we are in screen, let's say I start editing the
 configuration of the Django website:
 
-    vim mysite/settings.py
+vim mysite/settings.py
 
 Let's say I made some changes, and now I want to restart the
 site. I could exit vim or put in the background in order to
 run the command to restart the site, but I anticipate I will
 need to make further changes right here. It's easier to just
-create a new window now, using the screen command `C-a c`,
+create a new window now, using the screen command [C-a c],
 which means pressing the "Ctrl" and "a" keys at the same
 time, followed by "c". "C-a" is called the "command key",
 all screen commands start with this key sequence.
@@ -122,8 +122,8 @@ It's easy to create another window every time you start
 doing something different from your current activity. This
 is especially useful when you need to change the directory
 between commands. For example if you have script files in
-`/some/long/path/scripts` and log files in
-`/other/long/path/logs`, then instead of jumping between
+/some/long/path/scripts and log files in
+/other/long/path/logs, then instead of jumping between
 directories, just keep a separate window for each.
 
 In this example, first I started looking at the
@@ -135,21 +135,21 @@ a separate window for each activity.
 
 The cost of creating a new window is so small, you can do it
 without thinking. Don't interrupt your current activity:
-fire up another window with `C-a c` and rock on.
+fire up another window with [C-a c] and rock on.
 
 ### Switching between windows
 
 The windows you create in screen are numbered starting from
 zero. You can switch to a window by its number, for example
-jump to the first window with `C-a 0`, the second window
-with `C-a 1`, and so on. It's also very convenient to switch
-to the next and previous windows with `C-a n` and `C-a p`,
+jump to the first window with [C-a 0], the second window
+with [C-a 1], and so on. It's also very convenient to switch
+to the next and previous windows with [C-a n] and [C-a p],
 respectively.
 
 ### Listing your windows
 
 If you're starting to lose track of which window you are in,
-check the list of windows with `C-a w` or `C-a "`. The
+check the list of windows with [C-a w] or [C-a "]. The
 former shows the list of windows in the status line (at the
 bottom) of the screen, showing the current window marked
 with a "*". The latter shows the list of windows in a more
@@ -159,7 +159,7 @@ user-friendly format as a menu.
 
 The best time-saving feature of screen is reattaching to
 existing sessions. You can detach cleanly from the current
-screen session with `C-a d`. But you don't really need to.
+screen session with [C-a d]. But you don't really need to.
 You could just as well simply close the terminal window.
 
 The great thing about screen sessions is that whatever way
@@ -167,26 +167,26 @@ you got disconnected from them, you can reattach later. At
 the end of the day you can shut down your local PC without
 closing a remote screen session, and come back to it
 tomorrow by running the same command you used to start it,
-as in this example with `screen -R mysite`.
+as in this example with screen -R mysite.
 
 You might have multiple screen sessions running for
 different purposes. You can list them all with:
 
-    screen -ls
+screen -ls
 
 If you got disconnected from screen abruptly, then sometimes
 it may think you are still in an attached state, which will
-prevent you from reattaching with the usual command `screen
--R label`. In that case you can append a `-D` flag to force
+prevent you from reattaching with the usual command screen
+-R label. In that case you can append a -D flag to force
 detaching any existing connections, for example:
 
-    screen -R label -D
+screen -R label -D
 
 ### Learning more about screen
 
 If you want to learn more, see the man page and the links in
 the Resources section. The built-in cheat sheet of shortcuts
-also comes handy, you can view it with `C-a ?`.
+also comes handy, you can view it with [C-a ?].
 
 I should also mention a competitor of screen: tmux. I chose
 screen in this article because in my experience it is more
@@ -221,10 +221,10 @@ If you want to repeat a command you executed recently, it
 may be easy enough to just press the up arrow key a few
 times until you find it. If the command was more than just
 a few steps ago, then this becomes unwieldy. Very often it's
-much more practical to use the `C-r` shortcut instead, to
+much more practical to use the [C-r] shortcut instead, to
 find a specific command by a fragment.
 
-To search for a command in the past, press `C-r` and start
+To search for a command in the past, press [C-r] and start
 typing any fragment you remember from it. As you type, the
 most recent matching line will appear on the command line.
 This is an incremental search, which means you can keep
@@ -235,27 +235,27 @@ Let's try this with an example, and let's say I ran these
 commands yesterday, which means they are still in my recent
 history but too far away for using simply the up arrow:
 
-    ...
-    cd ~/dev/git/github/bashoneliners/
-    . ~/virtualenv/bashoneliners/bin/activate
-    ./run.sh pip install --upgrade django
-    git push beta master:beta
-    git push release master:release
-    git status
-    ...
+...
+cd ~/dev/git/github/bashoneliners/
+. ~/virtualenv/bashoneliners/bin/activate
+./run.sh pip install --upgrade django
+git push beta master:beta
+git push release master:release
+git status
+...
 
 Let's say I want to activate the virtualenv again. That's
 a hassle to type again, because I have to type at least
 a few characters at each path segment, even with tab
-completion. Instead, it's a lot easier to press `C-r` and
+completion. Instead, it's a lot easier to press [C-r] and
 start typing "activate".
 
 For a slightly more complex example let's say I want to run
 a "git push" command again but I don't remember exactly
-which one. So I press `C-r` and start typing "push". This
+which one. So I press [C-r] and start typing "push". This
 will match the most recent command but I actually want the
 one before that and I don't remember a better fragment to
-type. The solution is to press `C-r` again, in the middle of
+type. The solution is to press [C-r] again, in the middle of
 my current search, as that jumps to the next matching
 command. [Screenshot-2] illustrates my keystrokes and what
 this looks like on the command line.
@@ -271,13 +271,13 @@ through a long sequence of pipes with sed, awk, perl and
 whatnot. Or an rsync command with many flags, filters,
 exclusions. Or complex loops using "for" and "while". You
 can quickly bring those back to your command line right now
-using `C-r` and some fragment you remember from them.
+using [C-r] and some fragment you remember from them.
 
 Other notes:
 
 * The search is case sensitive.
 
-* You can abort the search with `C-c`
+* You can abort the search with [C-c]
 
 * To edit the line before running it, press any of the
   arrow keys
@@ -297,15 +297,15 @@ to move or delete, using these basic keys is just too slow.
 You can do the same much faster by knowing just a handful of
 interesting shortcuts:
 
-* `C-w`: cut text backward until space
+* [C-w]: cut text backward until space
 
-* `ESC-Backspace`: cut one word backward
+* [ESC-Backspace]: cut one word backward
 
-* `ESC-Delete`: cut one word forward
+* [ESC-Delete]: cut one word forward
 
-* `C-k`: cut from current position until the end of the line
+* [C-k]: cut from current position until the end of the line
 
-* `C-y`: paste the most recently cut text
+* [C-y]: paste the most recently cut text
 
 Not only it is faster to delete portions of a line chunk by
 chunk like this, an added bonus is that text deleted this
@@ -313,21 +313,21 @@ way is saved in a register so that you can paste later if
 needed. Take for example the following sequence of
 commands:
 
-    git init --bare /path/to/repo.git
-    git remote add origin /path/to/repo.git
+git init --bare /path/to/repo.git
+git remote add origin /path/to/repo.git
 
 Notice that the second command uses the same path at the
 end. Instead of typing that path twice, you could copy and
 paste it from the first command, using this sequence of
 keystrokes:
 
-1. Press `up`: bring back the previous command
+1. Press [up]: bring back the previous command
 
-2. Press `C-w`: cut the path argument `/path/to/repo.git`
+2. Press [C-w]: cut the path part: "/path/to/repo.git"
 
-3. Press `C-c`: cancel the current command
+3. Press [C-c]: cancel the current command
 
-4. Type "git remote add origin" and press `C-y` to paste the
+4. Type "git remote add origin" and press [C-y] to paste the
    path
    
 [Screenshot-3] illustrates my keystrokes and what this looks
@@ -340,13 +340,13 @@ somehow]
 Some of the editing shortcuts are more useful in combination
 with moving shortcuts:
 
-* `C-a`: jump to the beginning of the line
+* [C-a]: jump to the beginning of the line
 
-* `C-e`: jump to the end of the line
+* [C-e]: jump to the end of the line
 
-* `ESC-b`: jump one word backward
+* [ESC-b]: jump one word backward
 
-* `ESC-f`: jump one word forward
+* [ESC-f]: jump one word forward
 
 Jumping to the beginning is very useful when you mistyped
 the first words of a long command. You can jump to the
@@ -361,24 +361,24 @@ long path segments.
 A good starting point to learn these little tricks is to
 stop some old inefficient habits:
 
-* Don't clear the command line with backspace. Use `C-c`
+* Don't clear the command line with backspace. Use [C-c]
   instead.
 
-* Don't delete long arguments with backspace. Use `C-w`
+* Don't delete long arguments with backspace. Use [C-w]
   instead.
 
 * Don't move to the beginning or the end of the line using the
-  left and right arrow keys. Jump with `C-a` and `C-e`
+  left and right arrow keys. Jump with [C-a] and [C-e]
   instead.
 
 * Don't move over long terms using the arrow keys. Jump over
-  terms with `ESC-b` and `ESC-f` instead.
+  terms with [ESC-b] and [ESC-f] instead.
 
 * Don't press the up arrow 20 times to find a not so recent
-  previous command. Jump to it directly with `C-r` instead.
+  previous command. Jump to it directly with [C-r] instead.
 
 * Don't type anything twice on the same line. Copy it once
-  with `C-w` and reuse it many times with `C-y` instead.
+  with [C-w] and reuse it many times with [C-y] instead.
 
 Once you get the hang of it, you will start to see more and
 more situations where you can combine these shortcuts in
@@ -424,24 +424,24 @@ If you use the vim editor, you should feel right at home, as
 these shortcuts work the same way as in vim.
 
 Searching is case sensitive by default, unless you specify
-the `-i` flag when starting less. While reading a file, you
+the "-i" flag when starting less. While reading a file, you
 can toggle between case sensitive and insensitive modes by
 typing "-i".
 
 Moving around quickly There are a couple of shortcuts that
 help you move around quickly:
 
-* `g`: jump to the beginning of the file
+* g: jump to the beginning of the file
 
-* `G`: jump to the end of the file
+* G: jump to the end of the file
 
-* `space`: move forward by one window
+* space: move forward by one window
 
-* `b`: move backward by one window
+* b: move backward by one window
 
-* `d`: move down by half-window
+* d: move down by half-window
 
-* `u`: move up by half-window
+* u: move up by half-window
 
 ### Using markers
 
@@ -459,11 +459,11 @@ very inconvenient.
 A good solution is to place markers at the two locations so
 that you can jump to them directly. Markers work similarly
 as in the vim editor: you can mark the current position by
-pressing `m` followed by a lowercase letter, and you can
-jump to a marker by pressing `'` followed by the same
+pressing "m" followed by a lowercase letter, and you can
+jump to a marker by pressing "'" followed by the same
 letter. In our example I would mark the initialization part
-with `mi`, and the part with the error with `me`, so that
-I could jump to them easily with `'i` and `'e`. I chose the
+with "mi", and the part with the error with "me", so that
+I could jump to them easily with "'i" and "'e". I chose the
 letters as the initials of what the locations represent, so
 that I can remember them easily.
 
@@ -471,7 +471,7 @@ that I can remember them easily.
 
 If you are interested in more, see the man page of the less
 command. The built-in cheat sheet of shortcuts also comes
-handy, you can view it by pressing `h`.
+handy, you can view it by pressing "h".
 
 ## Emailing yourself
 
@@ -498,10 +498,10 @@ could save the log snippet in a file and run rsync on your
 local PC to copy it, or you can just mail it to yourself by
 simply piping it to this command:
 
-    mailx -s 'error logs' me@example.com
+mailx -s 'error logs' me@example.com
 
-Depending on your system, the `mailx` command might be
-different, but the parameters are probably the same: `-s`
+Depending on your system, the "mailx" command might be
+different, but the parameters are probably the same: "-s"
 specifies the subject (optional), and the remaining
 arguments are destination email addresses, and the standard
 input is used as the message body.
@@ -513,8 +513,7 @@ can be annoying to wait and keep checking if it's finished
 or not. It's better to arrange to trigger an email to
 yourself when the copying is completed, for example:
 
-    the_long_task; date | \
-    mailx -s 'job done' me@example.com
+the_long_task; date | mailx -s 'job done' me@example.com
 
 That is, when the long task is completed, the email command
 will run. In this example the message body will be simply
@@ -524,7 +523,7 @@ as the message, for example "ls -lh" on the file that was
 copied, or even multiple commands grouped together like
 this:
 
-    the_long_task; { df -h; tail some.log; } | \
+the_long_task; { df -h; tail some.log; } | \
     mailx -s 'job done' me@example.com
 
 ### Triggering an email alert by any kind of event
@@ -537,15 +536,15 @@ Have you ever been in one of these situations:
   your new evolution which will trigger a particular entry
   in the log
 
-* You are waiting for another team to deploy an updated
-  `.jar` file
+* You are waiting for another team to deploy an updated .jar
+  file
 
 Instead of staring at the screen or checking repeatedly
 whether the event you are waiting for has happened or not,
 you could use this kind of one-liner:
 
-    while :; do date; CONDITION && break; sleep 300; \
-    done; MAILME
+while :; do date; CONDITION && break; sleep 300; \
+done; MAILME
 
 This is essentially an infinite loop, with an appropriate
 CONDITION in the middle to exit the loop and thus trigger
@@ -559,20 +558,19 @@ determine whether the loop should exit or not. For the
 situations outlined above, we could write the CONDITION like
 this:
 
-* `ping -c1 serverX`: emit a single ping to serverX. If it
-  responds, ping will exit with success, ending the loop.
+* ping -c1 serverX: emit a single ping to serverX. If it
+responds, ping will exit with success, ending the loop.
 
-* `grep pattern /path/to/log`: search for the expected pattern
-  in the log. If the pattern is found, grep will exit with
-  success, ending the loop.
+* grep pattern /path/to/log: search for the expected pattern
+in the log. If the pattern is found, grep will exit with
+success, ending the loop.
 
-* `find /path/to/jar -newer /path/to/jar.marker`: this
-  assumes that before starting the infinite loop, you
-  created a marker file like this: `touch -r /path/to/jar
-  /path/to/jar.marker`, in order to save a copy of the exact
-  same timestamp as the `.jar` file you want to monitor. The
-  find command will exit with success after the `.jar` file has
-  been updated.
+* find /path/to/jar -newer /path/to/jar.marker: this assumes
+that before starting the infinite loop, you created a marker
+file like this: touch -r /path/to/jar /path/to/jar.marker,
+in order to save a copy of the exact same timestamp as the
+.jar file you want to monitor. The find command will exit
+with success after the jar file has been updated.
 
 In short: don't wait for a long-running task or some
 external event. Set up an infinite loop and alert yourself
@@ -591,12 +589,12 @@ minimal typing.
 
 ## Resources
 
-* `man screen`
+* man screen
 
-* `man bash` and search for "READLINE", "Commands for Moving",
+* man bash and search for "READLINE", "Commands for Moving",
   "Commands for Changing Text"
 
-* `man less`
+* man less
 
 * https://speakerdeck.com/janosgyerik/time-saving-tricks-on-the-command-line
 

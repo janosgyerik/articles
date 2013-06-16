@@ -8,46 +8,25 @@ Playbook
         - TODO: Clone from test repo
         - TODO: Commit to test repo
 
-0. Gists
+0. Stuff you might want to store in gists: `my-random-notes.md`
 
-        - TODO: example popular gist as a one-script project
+0. Create a dummy user account
 
-0. Create a dummy account
+0. Create a Gist: use some Java code, with intentional typo, add lines, delete lines
 
-0. Create a Gist
+0. Create another Gist: use the Sybase code
 
-        - TODO: workplace specific example in Java
-        - TODO: + make a change
-        - TODO: + add some more
-        - TODO: + delete some
-        - TODO: add the file here
+0. Create a dummy repo
 
-0. Create another Gist
+0. Add and edit files online: use the gists as example
 
-        - TODO: workplace specific example in SQL
-        - TODO: add the file here
+0. Edit using basic markdown: see `basic-markdown.md`
 
-0. Create a repository
+0. Edit using github flavored markdown: see `github-flavored-markdown.md`
 
-0. Add and edit files online
+0. Create a dummy wiki
 
-        - TODO: cheat sheet 1
-        - TODO: cheat sheet 2
-        - TODO: cheat sheet 3
+0. gh-pages: Create another repo for a sample jquery plugin: copy files from `jquery-sample`
 
-0. Edit using basic markdown
-
-        - TODO: basic markdown example
-
-0. Edit using github flavored markdown
-
-        - TODO: github flavored markdown example
-
-0. Wiki!
-
-        - TODO: table example with mediawiki
-
-0. gh-pages
-
-        - TODO: jquery plugin demo page
+        - TODO: jquery-sample ready for gh-pages
 

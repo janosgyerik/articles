@@ -39,3 +39,9 @@ SELECT * FROM sysobjects WHERE type='U' order by name
     body { padding-top: 0; }
 }
 ```
+
+
+...and more...
+--------------
+See https://help.github.com/articles/github-flavored-markdown
+(Yeah btw URLs are autolinked, no need to use the verbose syntax of "standard" markdown.)

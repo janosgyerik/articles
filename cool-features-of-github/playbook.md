@@ -2,11 +2,11 @@ Playbook
 --------
 0. Preparation
 
-    - TODO: Get projector ready
-    - TODO: Confirm desktop + voice recording
-    - TODO: Confirm wifi
-    - TODO: Clone from test repo
-    - TODO: Commit to test repo
+        - TODO: Get projector ready
+        - TODO: Confirm desktop + voice recording
+        - TODO: Confirm wifi
+        - TODO: Clone from test repo
+        - TODO: Commit to test repo
 
 0. Gists
 

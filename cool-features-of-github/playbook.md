@@ -8,7 +8,7 @@ Playbook
         - TODO: Clone from test repo
         - TODO: Commit to test repo
 
-0. Stuff you might want to store in gists: `my-random-notes.md`
+0. Stuff you might want to store in gists: see [my-random-notes.md](my-random-notes.md)
 
 0. Create a dummy user account
 
@@ -20,9 +20,9 @@ Playbook
 
 0. Add and edit files online: use the gists as example
 
-0. Edit using basic markdown: see `basic-markdown.md`
+0. Edit using basic markdown: see [basic-markdown.md](basic-markdown.md)
 
-0. Edit using github flavored markdown: see `github-flavored-markdown.md`
+0. Edit using github flavored markdown: see [github-flavored-markdown.md](github-flavored-markdown.md)
 
 0. Create a dummy wiki
 

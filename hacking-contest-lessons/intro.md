@@ -2,6 +2,14 @@
 
 *Careless programming security mistakes you don't want to repeat!*
 
+From https://stripe.com/blog/capture-the-flag
+
+> The hardest part of writing secure code is learning to think like an attacker.
+> For example, every programmer is told to watch out for SQL injections,
+> but it's hard to appreciate just how exploitable they are until you've written a SQL injection of your own.
+
+Although there are no SQL injections in this challenge, you get the idea.
+
 I'm a programmer, not a security expert.
 But I joined the hacking contest organized by Stripe anyway,
 out of curiosity.

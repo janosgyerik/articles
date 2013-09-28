@@ -1,17 +1,12 @@
 ## Resources
 
-* link -- comment  # stripe, first contest
+* https://stripe.com/blog/capture-the-flag, https://stripe.com/blog/capture-the-flag-wrap-up -- The security challenge organized by Stripe
 
-* link -- comment  # capture-the-flag iso download
+* https://sourceforge.net/projects/ctfomatic/files/ -- ISO files of the Capture The Flag live CD
 
-* link -- comment  # capture-the-flag github
+* https://github.com/janosgyerik/capture-the-flag -- Source code to build the ISO files
 
-* link -- comment  # smashthestack.io for more wargames
+* http://io.smashthestack.org:84/ -- More wargames on smashthestack.io
 
-* link -- comment
-
-* link -- comment
-
-* link -- comment
-
+* http://insecure.org/stf/smashstack.html -- Corrupting the execution stack by writing past the end of an array
 

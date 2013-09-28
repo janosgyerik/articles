@@ -1,15 +1,14 @@
-## Level 2: always validate all forms of user input
+## Level 2: always validate all sorts of user input
 
 As we login with `level01` user,
 the explanation of the next challenge appears.
 Like before,
-the password of user `level02`--the next level,
-is in the file `/home/level02/.password`.
+the password for the next level is in `/home/level02/.password`.
 We don't have any permissions on `/home/level02`,
 so the file is not easy to access.
 On the other hand,
-there seems to be a web-based vulnerability
-running on `http://localhost:8002/` as the user `level02`.
+the message of the day tell us about a web-based vulnerability
+running on `http://localhost:8002/`.
 
 Let's start by opening the URL to see what the page does.
 Replace `localhost` with the IP address you gave your VM.
@@ -19,9 +18,10 @@ Or, you can get the page using `curl` on the VM itself:
 
 Ok so the page has a simple form with two input fields:
 name and age.
-Let's play with it a little bit,
-especially by entering invalid values to see what happens,
-either using a browser or `curl`, for example:
+Let's play with that a little bit,
+especially by entering invalid values and see what happens.
+You can use a browser or `curl`,
+for example:
 
     curl localhost:8002 -d name=jack
     curl localhost:8002 -d name=jack -d age=3
@@ -42,7 +42,7 @@ Most websites store some data in cookies,
 for example a session id,
 so that users don't need to login repeatedly.
 
-How do cookies work?
+Ask yourself, how do cookies really work?
 Cookies are usually set by the server,
 by adding a `Set-Cookie` in the header of an HTTP response.
 When the browser receives such header,
@@ -93,54 +93,57 @@ Notice that the value set by the server looks suspiciously like a filename,
 with its `.txt` extension.
 What if we set the value to a valid file that exists in the filesystem?
 
-    echo hello > /tmp/hello
-    curl localhost:8002 --cookie user_details=/tmp/hello
+    echo hello > /tmp/x
+    curl localhost:8002 --cookie user_details=/tmp/x
 
-the `.txt` extension makes it look like a filename.
-to a seemingly random value,
-though the `.txt` suggests it is a filename.
+Sweet! The page prints the contents of the file!
+The next move is of course:
 
+    curl localhost:8002 --cookie user_details=/home/level02/.password
 
-Cookies are stored by the user's browser,
-and the browser resends them to the server in every single request.
-Notice the problem here:
-the server may set some values in the cookie,
-but the client can send back whatever he wants.
+Bingo!
+We managed to misuse the web service to do something it was clearly not intended for:
+print the contents of a file that's supposed to be private to the owner of the process,
+user `level02`.
+And we didn't even need to look at the source code!
 
-Visit the page 
-If you have setup your virtual machine with an IP address
-that you can access from your PC
-You could use a 
+Of course, we got a bit lucky here.
+I've seen similar vulnerabilities in real life,
+and in most cases absolute paths would not work,
+due to the way the web service was written.
+Relative paths are more likely to work.
+Not a problem,
+in that case we could try prefixing the absolute path with multiple `../` strings,
+until we reach the filesystem root so that the path becomes a valid relative path to the file we're looking for,
+like this:
 
-```python
-    user_details = request.cookies.get('user_details')
-    if not user_details:
-        params['out'] = 'Looks like a first time user. Hello, there!'
-        filename = random_string(16) + '.txt'
-        path = os.path.join(wwwdata_dir, filename)
-        f = open(path, 'w')
-        f.write('%s is using %s\n' % (request.remote_addr, request.user_agent))
-        resp = make_response(render_template('index.html', **params))
-        resp.set_cookie('user_details', filename)
-    else:
-        filename = user_details
-        path = os.path.join(wwwdata_dir, filename)
-        params['out'] = open(path).read()
-        resp = make_response(render_template('index.html', **params))
-```
+    curl localhost:8002 --cookie user_details=../home/level02/.password
+    curl localhost:8002 --cookie user_details=../../home/level02/.password
+    curl localhost:8002 --cookie user_details=../../../home/level02/.password
 
-On the next level
+What can we learn from all this?
 
-https://github.com/janosgyerik/ctf-o-matic/blob/master/ctf1/code/levels/level02/level02.py
-The vulnerability: using a browser cookie and without validation
-to read files on the server The exploit: a cookie can be crafted
-with a relative path to reveal the content of sensitive files The
-lesson: Always validate user input properly
+- Don't trust user input.
+  You have to validate all possible kinds of external input:
+  form fields, cookies, or other parameters your programs might use.
 
-Remember, the point is not about these specific challenges or their solution.
-The point is the process.
-Put your own programs to the test.
-Have you ever made a simple website that stores data in temporary files and shows their content to the user later?
-Or photos? Or videos?
-Are you sure you validate the inputs correctly?
-Are you sure one cannot enter values as a path prefix like `/path/to/somewhere` or `../../../path/to/somewhere` to read something they were not supposed to?
+- Take a long hard look at web services you have written.
+  What will happen if you feed it invalid values?
+  Are you sure there are no input fields that can be misused
+  to read or write to unauthorized files on your server?
+
+A realistic example is uploading a profile picture.
+Most users will upload regular image files,
+which you can simply display in `<img>` tags.
+But a malicious user might upload a script instead of a real image.
+Once the script is on the server,
+he may be able to run it and do nasty things.
+Even worse,
+after doing nasty things,
+the script may output image data,
+so that when other users view his profile page they would see a picture,
+but in fact the script would get access to the session cookie of the user that was included in the header of his http request,
+and potentially steal the session of other users.
+
+The bottom line is: you have to validate all sorts of user inputs carefully,
+especially on your public web services that are accessible by everyone.

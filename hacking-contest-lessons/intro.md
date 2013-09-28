@@ -78,3 +78,7 @@ administrators too.
 
 - the thought process
 - what could possibly go wrong?
+
+The purpose of the article is not to give you the solutions on a silver platter.
+It is to train you to think like an attacker,
+so that you can protect your own programs and scripts better.

@@ -1,5 +1,7 @@
 ## Level 3: validate user input and array boundaries
 
+Important: Intel based 32-bit Linux system
+
 As usual,
 the password for the next level is in `/home/level03/.password`,
 and a vulnerable setuid program with its source code is in `/levels/level03`.
@@ -275,9 +277,9 @@ What can we learn from all this?
 
 - Always check array boundaries.
 
-- Remove unused, deprecated code:
-  without the unused `run` command careless left inside the code,
-  it would not have been so easy to exploit the program.
+- Remove unused, deprecated code, especially if it's dangerous:
+  without the unused, dangerous `run` command careless left inside the code,
+  it would have been impossible to exploit the program.
 
 Take a long hard look at programs you have written.
 Do you always validate all user inputs?

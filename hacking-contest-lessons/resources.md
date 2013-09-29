@@ -10,3 +10,4 @@
 
 * http://insecure.org/stf/smashstack.html -- Corrupting the execution stack by writing past the end of an array
 
+* http://paulmakowski.wordpress.com/2011/01/25/smashing-the-stack-in-2011/ -- Explanation why some of the exercises in the Smash The Stack article no longer work in 2011

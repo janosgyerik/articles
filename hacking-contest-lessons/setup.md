@@ -1,4 +1,4 @@
-## Setup
+## Getting and using the live CD
 
 The hacking contest itself is implemented as a bootable ISO
 image: an ultra-light Linux live CD, in less than 30 megabytes.

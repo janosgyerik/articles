@@ -180,9 +180,13 @@ There is a very interesting item in the documentation:
 the `__reduce__()` method:
 
 > When the Pickler encounters an object of a type it knows nothing about — such as an extension type — it looks in two places for a hint of how to pickle it. One alternative is for the object to implement a __reduce__() method. If provided, at pickling time __reduce__() will be called with no arguments, and it must return either a string or a tuple.
+>
 > (...)
+>
 > When a tuple is returned, it must be between two and five elements long. (...) The contents of this tuple are pickled as normal and used to reconstruct the object at unpickling time.
+>
 > The semantics of each element are:
+>
 > A callable object that will be called to create the initial version of the object. The next element of the tuple will provide arguments for this callable, and later elements provide additional state information that will subsequently be used to fully reconstruct the pickled data.
 
 Based on this we must implement the `__reduce__` method in a certain way:

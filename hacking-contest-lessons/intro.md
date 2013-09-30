@@ -3,14 +3,11 @@
 *Careless security mistakes you don't want to repeat!*
 
 I'm a programmer, not a security expert.
-I didn't think I had any business joining an online hacking contest,
-but I couldn't help it, I was too curious.
-The event was organized by stripe.com in early 2012.
-They gave access to user level01 on a Linux server,
-with an alleged security problem that would lead to the account of user level02.
+But when I discovered the online hacking contest organized by stripe.com,
+I couldn't resist to have a quick look.
 The first level got me interested.
 The second got me completely hooked.
-A few long but exciting nights followed,
+A few long, but exciting nights followed,
 and I ended up learning much more than I had originally intended.
 Most importantly,
 I came to realize how innocent-looking programs can be abused to do unintended things.

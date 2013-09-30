@@ -1,5 +1,5 @@
 + solid intro
-solid setup
++ solid setup
 good level1
 good level2
 good level3

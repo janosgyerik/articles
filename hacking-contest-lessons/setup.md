@@ -1,5 +1,7 @@
 ## Getting and using the live CD
 
+The live 
+Download the
 The hacking contest itself is implemented as a bootable ISO
 image: an ultra-light Linux live CD, in less than 30 megabytes.
 Readers can download the ISO image from SourceForge and play with

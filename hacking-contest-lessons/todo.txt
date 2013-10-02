@@ -2,9 +2,12 @@
 + solid setup
 + good level1
 + good level2
-good level3
++ good level3
 rough level4
 rough level5
 rough level6
 solid conclusion
 + solid resources
+
+review all the "you" and all the "we"
+    - chapter by chapter

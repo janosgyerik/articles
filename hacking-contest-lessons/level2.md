@@ -85,9 +85,8 @@ Specifying the real file we're after probably works too:
     curl localhost:8002 --cookie user_details=/home/level02/.password
 
 Bingo!
-
 We managed to misuse the web service to do something it was clearly not intended for:
-print the contents of a file that's supposed to be private to the owner of the process,
+print the content of a file that's supposed to be private to the owner of the process,
 user `level02`.
 And we didn't even need to look at the source code!
 

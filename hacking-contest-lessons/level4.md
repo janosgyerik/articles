@@ -185,9 +185,9 @@ our shellcode will get executed.
 We can find the location of calls with register `%eax` with:
 ```
 level03@box:/levels/level04$ objdump -d level04 | grep call.*eax
- 8048488:	ff 14 85 1c 9f 04 08 	call   *0x8049f1c(,%eax,4)
- 80484cf:	ff d0                	call   *%eax
- 80485fb:	ff d0                	call   *%eax
+ 8048488:   ff 14 85 1c 9f 04 08    call   *0x8049f1c(,%eax,4)
+ 80484cf:   ff d0                   call   *%eax
+ 80485fb:   ff d0                   call   *%eax
 ```
 That's it, we can use either `0x080484cf` or `0x080485fb` as the address to jump to.
 ```

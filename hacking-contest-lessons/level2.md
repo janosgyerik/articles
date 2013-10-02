@@ -51,7 +51,7 @@ Server: Werkzeug/0.9-dev Python/2.7.3
 Date: Thu, 26 Sep 2013 05:49:09 GMT
 ```
 
-Evidently,
+As you can see the `Set-Cookie` line,
 the website sets a cookie with name `user_details`,
 and a seemingly random value.
 Let's send the cookie back and see what happens:

@@ -12,3 +12,4 @@
 
 6. http://paulmakowski.wordpress.com/2011/01/25/smashing-the-stack-in-2011/ -- Explanation why some of the exercises in the Smash The Stack article no longer work in 2011
 
+7. https://gist.github.com/ab/2127112/raw/ecaccce8a837efe0e7156c597cbe11c123229677/level06-exploit.rb -- Elegant solution for Level 6

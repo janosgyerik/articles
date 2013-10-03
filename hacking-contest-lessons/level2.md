@@ -1,7 +1,7 @@
-## Level 2: validate all types of user input
+## Level 2: validate all types of input
 
 As the message of the day explains,
-the next challenge is a web-based vulnerability.
+this challenge is a web-based vulnerability.
 Let's start by opening the URL to see what the page does:
 
     curl localhost:8002
@@ -36,13 +36,11 @@ by setting the exact same value in the `Cookie` header.
 That's what a well-behaving browser does.
 But nothing prevents us from setting it to something else.
 
-Enough speculation,
-let's see if this website uses cookies.
-One way to do that is adding the `-v` flag to see detailed output.
-A cleaner way is to save the header in a file using the `--dump-header` or its shorter alias `-D`:
+To see if the website uses cookies,
+let's save the HTTP header to a file:
 ```
-$ curl localhost:8002 -D header.txt
-$ cat header.txt 
+level01@box:~$ curl localhost:8002 -sD header.txt >/dev/null
+level01@box:~$ cat header.txt 
 HTTP/1.0 200 OK
 Content-Type: text/html; charset=utf-8
 Content-Length: 462
@@ -51,51 +49,50 @@ Server: Werkzeug/0.9-dev Python/2.7.3
 Date: Thu, 26 Sep 2013 05:49:09 GMT
 ```
 
-As you can see the `Set-Cookie` line,
-the website sets a cookie with name `user_details`,
-and a seemingly random value.
+As the `Set-Cookie` line reveals,
+the website sets a cookie named `user_details`,
+with a seemingly random value.
 Let's send the cookie back and see what happens:
+```
+level01@box:~$ curl localhost:8002 --cookie user_details=amzyYydipxZeZoVg.txt
+```
 
-    curl localhost:8002 --cookie user_details=amzyYydipxZeZoVg.txt
+There is an extra line above the input form:
+```
+<p>127.0.0.1 is using curl/7.21.7 (i686-pc-linux-gnu) libcurl/7.21.7 OpenSSL/1.0.0d zlib/1.2.5 libssh2/1.2.7</p>
+```
 
-Notice in the response an extra line above the input form:
+This happens to be an information about us, the client:
+`127.0.0.1` is our IP address and the text after "is using" is the `User-Agent` string of our "browser" (`curl`).
 
-    <p>127.0.0.1 is using curl/7.21.7 (i686-pc-linux-gnu) libcurl/7.21.7 OpenSSL/1.0.0d zlib/1.2.5 libssh2/1.2.7</p>
+What happens if we set the cookie to something else?
+```
+level01@box:~$ curl localhost:8002 --cookie user_details=x
+...
+<title>500 Internal Server Error</title>
+...
+```
 
-Actually this happens to be an information about us, the client:
-`127.0.0.1` is our IP address and the text after "is using" is the `User-Agent` string of our "browser", `curl`.
-
-What happens if we are not a well-behaving client and set the cookie to something else?
-
-    curl localhost:8002 --cookie user_details=x
-
-We get a `500 Internal Server Error`.
+Oops, a `500 Internal Server Error`.
 That doesn't help us much,
 but we can do better than shooting randomly.
-Notice that the value set by the server looks suspiciously like a filename,
-thanks to its `.txt` extension.
+Notice that the value "amzyYydipxZeZoVg.txt" looks suspiciously like a filename with a `.txt` extension.
 What if we set the value to a valid file that actually exists in the filesystem?
-
-    echo hello > /tmp/x
-    curl localhost:8002 --cookie user_details=/tmp/x
-
-Sweet! The page prints the contents of the file!
-Specifying the real file we're after probably works too:
-
-    curl localhost:8002 --cookie user_details=/home/level02/.password
+Such as the password file we're after?
+```
+level01@box:~$ curl localhost:8002 --cookie user_details=/home/level02/.password
+```
 
 Bingo!
-We managed to misuse the web service to do something it was clearly not intended for:
-print the content of a file that's supposed to be private to the owner of the process,
-user `level02`.
-And we didn't even need to look at the source code!
+We managed to trick the web service to reveal the content of a confidential file,
+without even looking at its source code!
 
 ### Lessons to learn
 
 - Don't trust user input.
-  You have to validate all possible kinds of external input:
+  You have to validate all possible types of input:
   form fields, cookies, command line arguments,
-  anything your programs might receive from its users.
+  anything your programs might receive.
 
 - Take a long hard look at web services you have ever written.
   What will happen if you feed them with invalid input?

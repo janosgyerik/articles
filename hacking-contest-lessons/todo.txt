@@ -1,7 +1,7 @@
 + solid intro
 + solid setup
 + solid level1
-+ good level2
++ solid level2
 + good level3
 + good level4
 + good level5

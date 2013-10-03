@@ -1,4 +1,4 @@
-## Level 2: always validate all types of user input
+## Level 2: validate all types of user input
 
 As the message of the day explains,
 the next challenge is a web-based vulnerability.

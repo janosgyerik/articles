@@ -1,4 +1,4 @@
-## Level 4: don't use unsafe library functions
+## Level 4: avoid unsafe library functions
 
 The source code on this level is surprisingly simple:
 ```

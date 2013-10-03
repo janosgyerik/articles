@@ -1,4 +1,4 @@
-## Level 5
+## Level 5: validate input strictly enough
 
 This may be the most realistic of all the challenges:
 the code is not trivial,
@@ -240,7 +240,7 @@ diebasuw
 
 Bingo!
 
-What can we learn from all this?
+## Lessons to learn
 
 - Read the documentation carefully:
   it warned about the dangers of unpickling untrusted text loud and clear.

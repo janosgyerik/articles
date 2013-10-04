@@ -71,14 +71,11 @@ The content of the stack will look something like this when we are inside `fun`:
 That is, the return address is somewhere soon after the end of the buffer.
 We can find the right position using `gdb`.
 When we overwrite the return address with something invalid,
-the program crashes with segmentation fault.
-When `gdb` reaches such code,
-it prints out the address it was trying to jump to.
+`gdb` will print the address it could not jump to.
 We can use this to guess the right location.
 
-Let's run the program in `gdb`,
-with a sufficiently long input string that will write beyond the end of `buf`,
-over the return address:
+We know that the size of `buf` is 1024,
+so let's run the program with a longer string:
 ```
 level03@box:/levels/level04$ gdb ./level04
 (gdb) run $(python -c 'print "A" * 1100')
@@ -87,8 +84,7 @@ Starting program: /levels/levels04/level04 $(python -c 'print "A" * 1100')
 Program received signal SIGSEGV, Segmentation fault.
 0x41414141 in ?? ()
 ```
-We have successfully overwritten the return address with "A"s,
-the program cannot jump to such address so it crashes.
+We have successfully overwritten the return address with "A"s.
 Let's try a shorter string,
 something that will help us pinpoint the correct position:
 ```
@@ -98,9 +94,8 @@ Starting program: /levels/levels04/level04 $(python -c 'print "A" * 1024 + "abcd
 Program received signal SIGSEGV, Segmentation fault.
 0x706f6e6d in ?? ()
 ```
-That looks like somewhere in the middle of our `abcd...xyz` sequence.
-To find the exact position,
-let's check the ASCII codes of these letters:
+That looks like somewhere in the middle of our `abc...` sequence.
+We can find the exact position by the ASCII codes of these letters:
 ```
 $ echo abcdefghijklmnopqrstuvwxyz | hexdump -C
 00000000  61 62 63 64 65 66 67 68  69 6a 6b 6c 6d 6e 6f 70  |abcdefghijklmnop|
@@ -110,7 +105,7 @@ $ echo abcdefghijklmnopqrstuvwxyz | hexdump -C
 As `m=6d n=6e o=6f p=70`,
 the return address is in the place of the letters `mnop`.
 Since there are 12 letters before "m",
-we can calculate that we need an input string of length 1024 + 12 + 4,
+we can calculate the target length that we need an input string of length 1024 + 12 + 4,
 where the last 4 bytes will be the address we want to jump to.
 Let's verify this final number with one last test in `gdb`:
 ```

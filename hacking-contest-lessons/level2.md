@@ -40,8 +40,8 @@ But nothing prevents us from setting it to something else.
 To see if the website uses cookies,
 let's save the HTTP header to a file:
 ```
-level01@box:~$ curl localhost:8002 -sD header.txt >/dev/null
-level01@box:~$ cat header.txt 
+$ curl localhost:8002 -sD header.txt >/dev/null
+$ cat header.txt 
 HTTP/1.0 200 OK
 Content-Type: text/html; charset=utf-8
 Content-Length: 462
@@ -68,7 +68,7 @@ This happens to be an information about us, the client:
 
 What happens if we set the cookie to something else?
 ```
-level01@box:~$ curl localhost:8002 --cookie user_details=x
+$ curl localhost:8002 --cookie user_details=x
 ...
 <title>500 Internal Server Error</title>
 ...

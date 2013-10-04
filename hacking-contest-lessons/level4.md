@@ -17,31 +17,26 @@ int main(int argc, char **argv) {
 The problem is obvious:
 `strcpy` is well-known to be unsafe,
 it doesn't check if the destination array has enough space to store the source array.
-With a sufficiently long command line argument we can overwrite the memory area beyond `buf`.
+We can overwrite the memory area beyond `buf` using a long command line argument.
 
 If you recall from the previous challenge,
 the return address is stored on the stack after local variables.
 The return address is the address where execution will jump to after executing the current function.
-By overwriting `buf`,
+By writing past the end of `buf`,
 we can overwrite the return address,
-and thus make the program jump to anywhere we want.
+and thus make the program jump to where we want.
 
 In the previous challenge we made the program jump to the insecure function `run`.
-Unfortunately,
-in this program there is no such insecure function,
-and so no easy target to jump to.
+In this program however there is no such easy target to jump to.
 On the other hand,
-what if we could bring some insecure code inside and jump there?
-For example by injecting it into `buf` through the input string,
-and then overwriting the return address to jump to our evil code.
+we can bring insecure code inside,
+by injecting it into `buf` through the input string.
 
-What kind of code should we try to inject?
-We could use what is commonly known as *shellcode*:
-a small piece of code that typically executes `/bin/sh`,
-written in machine language.
+We could inject what is commonly known as *shellcode*:
+a small piece of binary code that executes `/bin/sh`.
 
-Writing the shellcode itself is beyond the scope of this article.
-It is thoroughly explained in the Smash The Stack article[5].
+Implementing the shellcode itself is beyond the scope of this article.
+It is thoroughly explained in the Smash The Stack article[5], see the resources.
 Essentially it is a modified version of this simple C program:
 ```
 #include <stdio.h>
@@ -58,22 +53,16 @@ Writing shellcode is not easy.
 After compiling such program,
 there is more work to do,
 for example you may have to rewrite some of the assembly instructions in a way to eliminate NULL bytes,
-as `strcpy` won't copy anything after the first `NULL`.
+as `strcpy` won't copy anything after it sees the first `NULL`.
 
 For our purposes,
-we will take the finished shellcode from the Smash The Stack article[5]:
-```
-char shellcode[] =
-        "\xeb\x1f\x5e\x89\x76\x08\x31\xc0\x88\x46\x07\x89\x46\x0c\xb0\x0b"
-        "\x89\xf3\x8d\x4e\x08\x8d\x56\x0c\xcd\x80\x31\xdb\x89\xd8\x40\xcd"
-        "\x80\xe8\xdc\xff\xff\xff/bin/sh";
-```
-For convenience, let's save it in a shell variable:
+we can take the finished shellcode from the Smash The Stack article[5],
+and for convenience, let's save it in a shell variable:
 ```
 EGG=$(printf '\xeb\x1f\x5e\x89\x76\x08\x31\xc0\x88\x46\x07\x89\x46\x0c\xb0\x0b\x89\xf3\x8d\x4e\x08\x8d\x56\x0c\xcd\x80\x31\xdb\x89\xd8\x40\xcd\x80\xe8\xdc\xff\xff\xff/bin/sh')
 ```
 Next,
-we need to find the right position in the input spring where we can overwrite the return address.
+we need to find the location of the return address.
 The content of the stack will look something like this when we are inside `fun`:
 ```
 0x0000      content of the local variable buf (1024 bytes)

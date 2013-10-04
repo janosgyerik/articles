@@ -98,3 +98,6 @@ without even looking at its source code!
   What will happen if you feed them with invalid input?
   Are you sure there are no input fields or cookies that can be misused?
 
+- Don't use techniques that divulge internal information,
+  such as the cookie value that looked like a filename.
+

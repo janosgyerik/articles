@@ -89,3 +89,5 @@ Bingo! Now we can login as user `level01` using the revealed password.
 
 - Beware of environment variables that users can manipulate to alter the behavior of your programs.
 
+- Beware of setuid programs.
+

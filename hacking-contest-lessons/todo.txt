@@ -10,24 +10,6 @@ email jill
 
 memo:
 ----
-Gergely Nagy	12:11 AM
-az unsafe libfuncs-ra léteznek "listák"? esetleg linkelhetsz ilyen read-on infóra ha az pl statikus mint wikipedia vagy stb
-me	12:13 AM
-az a biztos ha megnezed a doksijat annak amit hasznalsz, mert altalaban le van irva
-pl man strcpy, man memcpy, stb
-
-2-5) input validation minden felhasznált változóra
-me	12:17 AM
-lenyegeben igen
-+ setuid
-
-kimenet szűrés (a "fecsegő" kód) téma esetleg a 2-esben kiemelhető, ha nem lett volna totál egyértelmű a cookie .txt nem jön rá soha
-
-van egy system exec bemutatód
-majd 4 input validation
-
-inkább a ISO doksiában mennék el ennyire step by step a megoldások irányába
-
 a feladatok leírásában a Lessons to learn a TUTI fontos
 
 vegyél vissza a megoldás részletezéséből, ha értelmes marad az adott bekezdés egy.két lépést hagyj meg mint "hopp itt kell figyelni"

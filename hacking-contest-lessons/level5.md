@@ -3,11 +3,11 @@
 This is a quite realistic challenge:
 the code is not trivial,
 not badly written,
-doesn't have too obvious mistakes.
+and it doesn't have too obvious mistakes.
 
 What can we see easily?
-The description tells us the program is uppercasing service,
-and we can use like this:
+The description tells us the program is an uppercasing service,
+and we can use it like this:
 ```
 $ curl localhost:8005 -d 'hello friend'
 {
@@ -17,7 +17,7 @@ $ curl localhost:8005 -d 'hello friend'
 }
 ```
 
-The description also tells us that the service is structured as a queue server and a queue worker.
+The description also mentions that the service is structured as a queue server and worker.
 Sure enough,
 in the `main` method we can see two modes of invocation,
 using `worker` or `server` as the command line argument.
@@ -33,7 +33,7 @@ the `QueueHttpServer` class has two methods for handling GET and POST requests.
 The `do_GET` method simply prints a help message and doesn't handle any inputs.
 The `do_POST` method takes the POST data and passes it to a new `QueueServer` instance:
 ```
-def do_POST(self):
+    def do_POST(self):
         length = int(self.headers.getheader('content-length'))
         post_data = self.rfile.read(length)
         raw_data = urllib.unquote(post_data)
@@ -66,12 +66,11 @@ class QueueServer(object):
         serialized = """type: %s; data: %s; job: %s""" % (direction, data, pickle.dumps(job))
         # ...
 ```
-Remember that the `POST` data we send from `curl` is now in the `data` variable in the code.
-What will the serialized string look like?
+Remember that the `POST` data we send from `curl` is now in the `data` variable.
 We can trace back that `type` can be either "JOB" or "RESULT",
 `data` is whatever we send with `curl`,
 and `job` is a `Job` object,
-serialized to a string using the `pickle` library.
+serialized to a string using the `pickle.dumps` call.
 The result will look like this:
 ```
 type: JOB; data: OUR_DATA; job: JOB_OBJ_AS_PICKLE
@@ -79,12 +78,11 @@ type: JOB; data: OUR_DATA; job: JOB_OBJ_AS_PICKLE
 
 Is this safe?
 What will happen if we send `x; job: hello` as the input?
-The result will look like this:
 ```
 type: JOB; data: x; job: hello; job: JOB_OBJ_AS_PICKLE
 ```
-We don't know yet how this serialized string is used later in the program,
-but having two `job:` might be an interesting corner case.
+We don't know yet how this serialized string will be used later,
+but having two `job:` segments there might be an interesting corner case.
 Let's see what actually happens if we call the service with such input:
 ```
 $ curl localhost:8005 -d 'x; job: hello'
@@ -93,7 +91,6 @@ $ curl localhost:8005 -d 'x; job: hello'
 }
 ```
 That doesn't look too good.
-Perhaps we successfully corrupted the job data.
 Let's track down what happens to the serialized string.
 Notice the `deserialize` method in `QueueUtils`:
 ```
@@ -105,7 +102,7 @@ Notice the `deserialize` method in `QueueUtils`:
         data = match.group(2)
         job = pickle.loads(match.group(3))
 ```
-Notice the regular expression used when setting `parser`.
+Look at the regular expression used when setting `parser`.
 Since data is matched with the non-greedy pattern `.*?`,
 using an input like `; job: EVIL_CODE`,
 we can trick the program into matching `EVIL_CODE` as the content of `job`,
@@ -138,12 +135,12 @@ The next element of the tuple will provide arguments for this callable,
 and later elements provide additional state information that will subsequently be used to fully reconstruct the pickled data.
 
 Based on this info,
-we can create a custom object type that Pickler knows nothing about,
+we can create a class,
 and implement the `__reduce__` method to have the following properties:
 
-- Return a tuple
-- The first item in the tuple should be a callable
-- The second item should be a tuple of arguments for the callable
+- Return a tuple.
+- The first item in the tuple should be a callable.
+- The second item should be a tuple of arguments for the callable.
 
 But what should be the callable and its arguments?
 Perhaps the Python equivalent of the shellcode we used in C programs?
@@ -176,8 +173,8 @@ Rp3
 .
 ```
 Our crafted input has the right prefix,
-`; job: `,
-let's send this to the service:
+`; job: `.
+Let's send this to the service:
 ```
 $ curl localhost:8005 --data-urlencode @pickle.txt
 {
@@ -187,15 +184,14 @@ $ cat /tmp/p
 diebasuw
 ```
 
-Bingo! The inject evil code was unpickled, and executed,
-copying the content of the password file to a place where we can see.
+Bingo! The injected code was unpickled and executed,
+copying the content of the password file to a place where we can see it.
 
 ## Lessons to learn
 
 - Read the docs well:
-  the documentation of pickle warns loud and clear right at the top not to unpickle untrusted text.
+  the documentation of pickle warns not to unpickle untrusted text,
+  loud and clear.
 
-- Validate input strictly enough.
-  Trace in your code all the places where the input may pass through,
-  and make sure your validation is strict enough.
+- Make sure your input validation is strict enough.
 

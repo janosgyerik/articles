@@ -1,15 +1,6 @@
-re-read all
-    watch out for uses of "we" and "you"
 split version
 email jill
     tagline
     teaser
     bio
     other ?
-
-memo:
-----
-a feladatok leírásában a Lessons to learn a TUTI fontos
-
-vegyél vissza a megoldás részletezéséből, ha értelmes marad az adott bekezdés egy.két lépést hagyj meg mint "hopp itt kell figyelni"
-

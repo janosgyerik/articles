@@ -144,34 +144,25 @@ thanks to address space layout randomization (ASLR) used in modern operating sys
 the start address of the stack is randomized,
 making it extremely difficult to guess the right location.
 
-Luckily for us,
-some interesting details work in our favor:
-
-- On 32-bit x86 processors,
-  a function that returns a pointer value places its result in register `%eax`.
-
-- `strcpy` is the last call in the function `fun`,
-  so its returned value remains in `%eax` when the function returns.
-
-- There are `call *%eax` instructions inside the program,
-  which are suitable jump targets,
-  as they execute the code at the address stored in register `%eax`.
-
-That is,
-we can put our shellcode at the start of `buf`,
-then when `strcpy` returns,
-the address of `buf` will be saved in `%eax`,
-and so if we overwrite the return address with any of the `call *%eax` instructions,
-then our shellcode at the start of `buf` will get executed.
-
-Find the addresses of `call *%eax` instructions using `objdump`:
+There is something else we can try.
+On 32-bit x86 processors,
+a function that returns a pointer value places its result in register `%eax`.
+The result of `strcpy` is the address of the destination,
+in our case `buf`.
+And since `strcpy` is the last line in the function,
+there is nothing else to change the content of `%eax` before the function exits.
+Finally,
+a `call *%eax` instruction executes the code at the address stored in `%eax`,
+so if there is any such instruction inside the code,
+we can use its address:
 ```
 level03@box:/levels/level04$ objdump -d level04 | grep call.*eax
  8048488:   ff 14 85 1c 9f 04 08    call   *0x8049f1c(,%eax,4)
  80484cf:   ff d0                   call   *%eax
  80485fb:   ff d0                   call   *%eax
 ```
-That's it, we can use either `0x080484cf` or `0x080485fb` as the address to jump to:
+Thus,
+we can use either `0x080484cf` or `0x080485fb` as the address:
 ```
 level03@box:/levels/level04$ ./level04 $EGG$(python -c 'print "A" * 991')$(printf '\xcf\x84\x04\x08')
 /levels/level04 $ cat /home/level04/.password 
@@ -181,8 +172,9 @@ paegeiqu
 ## Lessons to learn
 
 - Don't use unsafe library functions like `strcpy`.
+  Check the documentation, it usually warns of security issues.
 
 - Always make sure that arrays cannot be written beyond their boundaries.
 
-- Always validate user input, and set reasonable limits to input length.
+- Always validate user input, and set reasonable limits to length.
 

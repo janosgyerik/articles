@@ -8,12 +8,12 @@ I wasn't too excited, but I decided to give it a quick look anyway.
 The first level got me interested.
 The second got me completely hooked.
 The "quick look" turned into long nights,
-but in the end I came out enlightened.
+but in the end I felt thoroughly enlightened.
 Having experienced seemingly harmless programs bent to do harmful things made me much more aware of potential issues in my own work.
 Knowing how to detect and exploit weaknesses is not something "good to know",
-it's essential to protecting your programs.
+it's essential to be able to protect your programs.
 
-The online security contest is now over,
+The online security contest is over,
 and of course the contest server was taken offline.
 After all,
 who would want to keep a server with security holes running in the wild?

@@ -3,8 +3,9 @@
 As the message of the day explains,
 this challenge is a web-based vulnerability.
 Let's start by opening the URL to see what the page does:
-
-    curl localhost:8002
+```
+curl localhost:8002
+```
 
 The page has a simple form with two input fields:
 name and age.
@@ -54,7 +55,7 @@ the website sets a cookie named `user_details`,
 with a seemingly random value.
 Let's send the cookie back and see what happens:
 ```
-level01@box:~$ curl localhost:8002 --cookie user_details=amzyYydipxZeZoVg.txt
+curl localhost:8002 --cookie user_details=amzyYydipxZeZoVg.txt
 ```
 
 There is an extra line above the input form:
@@ -63,7 +64,7 @@ There is an extra line above the input form:
 ```
 
 This happens to be an information about us, the client:
-`127.0.0.1` is our IP address and the text after "is using" is the `User-Agent` string of our "browser" (`curl`).
+`127.0.0.1` is our IP address and the text after "is using" is the `User-Agent` string of our "browser": `curl`.
 
 What happens if we set the cookie to something else?
 ```
@@ -77,15 +78,15 @@ Oops, a `500 Internal Server Error`.
 That doesn't help us much,
 but we can do better than shooting randomly.
 Notice that the value "amzyYydipxZeZoVg.txt" looks suspiciously like a filename with a `.txt` extension.
-What if we set the value to a valid file that actually exists in the filesystem?
+What if we set the value to a real file that actually exists in the filesystem?
 Such as the password file we're after?
 ```
-level01@box:~$ curl localhost:8002 --cookie user_details=/home/level02/.password
+curl localhost:8002 --cookie user_details=/home/level02/.password
 ```
 
 Bingo!
 We managed to trick the web service to reveal the content of a confidential file,
-without even looking at its source code!
+without even looking at the source code.
 
 ### Lessons to learn
 

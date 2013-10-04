@@ -1,6 +1,0 @@
-split version
-email jill
-    tagline
-    teaser
-    bio
-    other ?

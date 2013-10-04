@@ -23,7 +23,7 @@ text1() {
 }
 
 combine2() {
-    cat cont.md level[4-6].md conclusion.md | combine
+    cat intro2.md level[4-6].md conclusion.md | combine
 }
 
 html2() {

@@ -1,6 +1,6 @@
 ## Level 4: avoid unsafe library functions
 
-The source code on this level is surprisingly simple:
+The source code of this level is surprisingly simple:
 ```
 void fun(char *str) {
   char buf[1024];

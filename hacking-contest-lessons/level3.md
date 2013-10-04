@@ -191,7 +191,8 @@ cat: can't open '��': No such file or directory
 
 - When validating user input,
   remember to consider nonsense input too,
-  like negative indexes in this example.
+  like negative indexes in this example,
+  also known as *fuzz testing*.
 
 - Always check array boundaries,
   make sure they are not breached at either end.

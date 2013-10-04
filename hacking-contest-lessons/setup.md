@@ -39,7 +39,6 @@ and copy to the VM when ready.
 There is a built-in `ssh` server for this:
 you can login with `ssh`,
 or transfer files using `scp`, `sftp` or `rsync`.
-
 To access the VM "remotely",
 you must configure its network interface appropriately,
 using one of the options provided by your virtualization software.

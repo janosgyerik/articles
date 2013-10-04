@@ -19,13 +19,12 @@ All the levels on this CD work roughly the same way:
 - The vulnerable programs and their source code are stored in the `/levels/levelXX` directories.
 
 - The explanation of the level is shown when you login,
-  it comes from the file `motd.txt` in the user's home directory,
-  so you can re-read it anytime.
+  it saved in the file `motd.txt` in the user's home directory.
 
 - The explanation of the level always contains a hint to beat the challange, so it's good to read it carefully.
 
 Let's get started!
-Taking the hint from the message after login,
+Taking the hint from the explanation of the level,
 look at the files in the `/levels/level01` directory:
 
     level00@box:~$ ls -l /levels/level01
@@ -57,8 +56,8 @@ return 0;
 
 Instead of using a native C function to get the date,
 the program calls the `system` function to run the `date` command.
-We can look up what `system` does exactly with `man system`:
-it executes the specified command by calling `/bin/sh -c`.
+We can find how `system` works in `man system`:
+it executes the given string by calling `/bin/sh -c`.
 
 Consider how the shell executes a command that is not an absolute path:
 for each directory defined in `PATH`,
@@ -66,7 +65,7 @@ it checks if there is an executable file,
 and it runs the first match.
 We can easily exploit this by creating our own script named `date`,
 prepend its base directory to `PATH`,
-and make it print the contents of `/home/level01/.password`.
+and make it print `/home/level01/.password`.
 Here we go:
 
 ```
@@ -77,7 +76,7 @@ Current time: aepeefoo
 #!/bin/cat /home/level01/.password
 ```
 
-Bingo! Now we can login as user `level01` using the revealed password.
+Bingo! Now we can login as `level01` using the revealed password.
 
 ### Lessons to learn
 

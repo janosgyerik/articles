@@ -2,12 +2,8 @@
 
 When the live CD starts,
 you are automatically logged in as user `level00`.
-The "message of the day" says:
-
-> In /home/level01/.password is the password of the level01 user.
-> Your mission, should you choose to accept it, is to read that
-> file and login as level01 to advance to the next level.
-> You may find the files in /levels/level01 useful.
+The "message of the day" explains that the password of `level01` is saved in `/home/level01/.password`,
+and your goal is to read that file and login as `level01`.
 
 All the levels on this CD work roughly the same way:
 
@@ -23,9 +19,8 @@ All the levels on this CD work roughly the same way:
 
 - The explanation of the level always contains a hint to beat the challange, so it's good to read it carefully.
 
-Let's get started!
 Taking the hint from the explanation of the level,
-look at the files in the `/levels/level01` directory:
+let's look at the files in the `/levels/level01` directory:
 
 ```
 $ ls -l /levels/level01
@@ -56,7 +51,7 @@ system("date");
 return 0;
 ```
 
-Instead of using a native C function to get the date,
+Instead of using native C functions to get the date,
 the program calls the `system` function to run the `date` command.
 We can find how `system` works in `man system`:
 it executes the given string by calling `/bin/sh -c`.

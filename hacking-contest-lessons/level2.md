@@ -14,9 +14,7 @@ especially by entering invalid values,
 and see what happens:
 ```
 curl localhost:8002 -d name=jack
-curl localhost:8002 -d name=jack -d age=3
 curl localhost:8002 -d name=jack -d age=x
-curl localhost:8002 -d age=3
 curl localhost:8002 -d name="';select * from users" -d age=x
 ```
 
@@ -28,8 +26,8 @@ Most websites store some data in cookies,
 for example a session id,
 so that users don't need to login repeatedly.
 
-How do cookies really work?
-Cookies are usually set by the server,
+How do cookies work?
+Cookies are set by the server,
 by adding a `Set-Cookie` value in the header of an HTTP response.
 Once a browser received a cookie,
 it will resend it to the server in every future request until it expires,
@@ -63,8 +61,8 @@ There is an extra line above the input form:
 <p>127.0.0.1 is using curl/7.21.7 (i686-pc-linux-gnu) libcurl/7.21.7 OpenSSL/1.0.0d zlib/1.2.5 libssh2/1.2.7</p>
 ```
 
-This happens to be an information about us, the client:
-`127.0.0.1` is our IP address and the text after "is using" is the `User-Agent` string of our "browser": `curl`.
+This is an information about us, the client:
+`127.0.0.1` is our IP address and the text after "is using" is the `User-Agent` string of our browser, `curl`.
 
 What happens if we set the cookie to something else?
 ```
@@ -76,8 +74,8 @@ $ curl localhost:8002 --cookie user_details=x
 
 Oops, a `500 Internal Server Error`.
 That doesn't help us much,
-but we can do better than shooting randomly.
-Notice that the value "amzyYydipxZeZoVg.txt" looks suspiciously like a filename with a `.txt` extension.
+but we can do better than shoot randomly.
+Notice the value of `user_details=amzyYydipxZeZoVg.txt` looks suspiciously like a filename with a `.txt` extension.
 What if we set the value to a real file that actually exists in the filesystem?
 Such as the password file we're after?
 ```

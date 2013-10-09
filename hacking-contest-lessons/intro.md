@@ -27,3 +27,4 @@ The goal is not to give you the solutions on a silver platter,
 but to explain the thought process of finding security holes.
 By applying the same kind of critical thinking to your own programs,
 you can protect them better against attackers.
+

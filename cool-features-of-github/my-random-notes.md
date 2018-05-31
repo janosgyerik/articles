@@ -5,7 +5,7 @@ A bunch of random (but useful!) notes you might keep in a plain txt file...
 
 Java notes
 ------------
-```
+```java
 // where the hell my log4j settings come from??
 System.out.println(Loader.getResource("log4j.properties"));
 System.out.println(Loader.getResource("log4j.xml"));
@@ -20,7 +20,7 @@ Thread.currentThread().getStackTrace()[2]
 
 Sybase notes
 ------------
-```
+```sql
 -- all tables in the database
 SELECT * FROM sysobjects WHERE type='U' order by name
 
@@ -34,7 +34,7 @@ WHERE sysobjects.name='the_table'
 
 MySQL notes
 -----------
-```
+```sql
 -- "create" a user in MySQL
 GRANT ALL PRIVILEGES ON dbname.* TO 'dbuser'@localhost IDENTIFIED BY 'userpass';
 
@@ -47,7 +47,7 @@ INTO OUTFILE '/tmp/country.txt' FIELDS TERMINATED BY ',' ENCLOSED BY '"' LINES T
 
 CSS notes
 ---------
-```
+```css
 /* CSS media query: apply if width < 980px */
 @media (max-width: 980px) {
     body { padding-top: 0; }
